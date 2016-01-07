@@ -20,40 +20,43 @@ angular
     .module('kds.stepper')
     .directive('kdsStepper', KdsStepper);
 
-function KdsStepper($mdTheming) {
+function KdsStepper($mdTheming, $compile) {
   return {
     scope: {
-      selectedIndex: '=?kdsSelected',
 
     },
     restrict: 'EA',
     controller: 'KdsStepperController',
     controllerAs: '$kdsStepperCtrl',
     bindToController: true,
-    transclude: true,
-    template: function (elem, attr) {
+    terminal: true,
+    template: function (elem, attr){
+      var steps = elem.children();
+      attr.$kdsSteps = steps;
       return '' +
-            '<kds-steps-wrapper>' +
-              '<kds-step-item flex layout="row" layout-align="center center" ng-repeat="step in $kdsStepperCtrl.steps" ' +
-                'ng-disabled="step.index > $kdsStepperCtrl.currentStep+1" kds-step-done="false"' +
-                'ng-class="{active: step.index == $kdsStepperCtrl.currentStep, disabled: step.index > $kdsStepperCtrl.currentStep}" md-ink-ripple="#aaa">' +
-                '<md-button flex="none" class="md-fab md-mini md-primary"  md-no-ink  aria-label="{{step.attrs.kdsLabel}}" ng-switch on="$kdsStepperCtrl.doneSteps"> ' +
-                  '<md-icon md-svg-icon="md-done" ng-show="step.done"></md-icon> {{ ($index + 1) }} ' +
-                '</md-button>' +
-                '{{kdsStepDone == true}}<span flex="none"> {{ step.attrs.kdsLabel ||  $kdsStepperCtrl.stepLabel + ($index+1) }}  </span>' +
-                '<span flex style="height: 1px; background:rgba(0,0,0,.15); margin-left: 8px"></span> ' +
-              '</kds-step-item>' +
-            '</kds-steps-wrapper>'+
-            '<kds-steps-content ng-transclude></kds-steps-content>';
+            '<kds-steps-wrapper layout="{{$kdsStepperCtrl.orientation}}"> </kds-steps-wrapper>'+
+            '<kds-steps-content ng-repeat="step in $kdsStepperCtrl.steps">' +
+              '<kds-step></kds-step>' +
+            '</kds-steps-content>';
     },
-    link: function (scope, elem, attrs, controller) {
-      $mdTheming(elem);
-      var stepCount = elem.find('kds-step').length;
-      controller.stepCount = stepCount;
+    link: function (scope, elem, attr, controller, transclude) {
+      var stepper = elem.contents();
+      var templates = attr.$kdsSteps;
+      var steps = [];
+      for (var i = 0; i < templates.length; i++) {
+        var step = {
+          label: templates[i].getAttribute('label'),
+          html: templates[i].innerHTML
+        }
+        steps.push(step);
+      }
+      //console.log(steps);
+      controller.steps = steps;
+      $compile(stepper)(scope);
     }
   }
 }
-KdsStepper.$inject = ['$mdTheming'];
+KdsStepper.$inject = ['$mdTheming', '$compile'];
 
 
 
@@ -71,10 +74,18 @@ function KdsStepperWrapper() {
   return {
     restrict: 'E',
     require: '^kdsStepper',
-    transclude: true,
     template: function () {
-      return '<div layout="{{$kdsStepperCtrl.orientation}}" class="kds-steps-indicators" ng-transclude></div>';
-    }
+      return '' +
+        '<kds-step-item flex layout="row" layout-align="center center" ng-repeat="step in $kdsStepperCtrl.steps" ' +
+          'ng-disabled="step.index > $kdsStepperCtrl.currentStep+1" kds-step-done="false"' +
+          'ng-class="{active: step.index == $kdsStepperCtrl.currentStep, disabled: step.index > $kdsStepperCtrl.currentStep}" md-ink-ripple="#aaa">' +
+          '<md-button flex="none" class="md-fab md-mini md-primary"  md-no-ink  aria-label="{{step.attrs.kdsLabel}}" ng-switch on="$kdsStepperCtrl.doneSteps"> ' +
+            '<md-icon md-svg-icon="md-done" ng-show="step.done"></md-icon> {{ ($index + 1) }} ' +
+          '</md-button>' +
+          '<span flex="none"> {{ step.label ||  $kdsStepperCtrl.stepLabel + ($index+1) }}  </span>' +
+          '<span flex style="height: 1px; background:rgba(0,0,0,.15); margin-left: 8px"></span> ' +
+        '</kds-step-item>' ;
+    },
   }
 }
 
@@ -101,9 +112,6 @@ function KdsStepItem() {
       elem.on('click', function (e) {
         scope.kdsStepDone = true
         attr.kdsStepDone = true;
-        console.log(scope);
-        console.log(this);
-        console.log(elem);
       })
     }
   }
@@ -125,14 +133,8 @@ angular.module('kds.stepper')
 function kdsStepsContent () {
   return {
     restrict: 'E',
-    require: '^kdsStepper',
-    //transclude: true,
-    //template: function () {
-      //return '<div ng-transclude></div>';
-    //}
   };
 }
-
 
 
 
@@ -149,59 +151,18 @@ angular
     .module('kds.stepper')
     .directive('kdsStep', KdsStep);
 
-function KdsStep() {
+function KdsStep($compile) {
   return {
     restrict: 'E',
-    // Require the instance of the parent controller, so each step is attached to a kds-stepper
-    // '^' indicates a parent level
     require: '^kdsStepper',
-    transclude: true,
-    template: function (elem, attr, a) {
-      return '' +
-          '<div ng-show="true" ng-transclude data-test="{{$kdsStepperCtrl.currentStep}}">' +
-          '</div>';
-    },
     link: function (scope, elem, attrs, controller) {
       var kdsSteps = elem.parent().children();
       var i = Array.prototype.indexOf.call(kdsSteps, elem[0]);
-
-      scope.currentStep = controller.currentStep;
-      scope.$watch('currentStep', function (value, old, s) {
-        if(i == value){
-
-        }
-      }, true)
-
-      controller.steps.push({
-        attrs: attrs,
-        elem: elem,
-        index: i,
-        done: false,
-        error: false
-      });
-
+      var stepContent = $compile(scope.step.html)(scope);
+      elem.append(stepContent);
     },
   }
 }
 
 
 
-/**
- * @ngdoc directive
- * @name kdsStepsWrapper
- * @description
- * The wrapper for the steps pagination
- * @restrict E*/
-angular.module('kds.stepper')
-  .directive('kdsStep2', KdsStep2);
-
-function KdsStep2() {
-  return {
-    restrict: 'E',
-    require: '^kdsStepper',
-    template: function () {
-      return '<div ng-show="true" data-test="{{$kdsStepperCtrl.currentStep}}">' +
-        '</div>';
-    }
-  }
-}
