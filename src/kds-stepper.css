@@ -1,0 +1,53 @@
+div.layout-column {
+  padding-bottom: 30px; }
+
+kds-stepper {
+  -webkit-box-shadow: 0px 3px 7px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 0px 3px 7px rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 3px 7px rgba(0, 0, 0, 0.2);
+  display: block;
+  padding: 0 !important; }
+  kds-stepper.round kds-steps-wrapper {
+    border-radius: 10000px;
+    overflow: hidden;
+    position: relative; }
+  kds-stepper kds-steps-wrapper {
+    overflow: hidden !important;
+    position: relative !important;
+    display: block;
+    -webkit-box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.2);
+    box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.2); }
+    kds-stepper kds-steps-wrapper kds-step-item {
+      display: block;
+      padding: 18px 0;
+      position: relative !important; }
+      kds-stepper kds-steps-wrapper kds-step-item.disabled {
+        color: rgba(0, 0, 0, 0.38); }
+        kds-stepper kds-steps-wrapper kds-step-item.disabled .md-fab {
+          background: #9E9E9E !important; }
+      kds-stepper kds-steps-wrapper kds-step-item:first-child {
+        padding-left: 24px;
+        overflow: hidden !important; }
+      kds-stepper kds-steps-wrapper kds-step-item:last-child {
+        padding-right: 24px;
+        overflow: hidden; }
+    kds-stepper kds-steps-wrapper .md-fab {
+      width: 28px !important;
+      height: 28px !important;
+      min-height: 24px;
+      margin-left: 24px; }
+      kds-stepper kds-steps-wrapper .md-fab md-icon {
+        width: 20px;
+        height: 20px;
+        display: block;
+        margin-top: 5px;
+        margin-left: -1px; }
+      kds-stepper kds-steps-wrapper .md-fab span {
+        display: block;
+        line-height: 30px; }
+  kds-stepper kds-steps-content {
+    display: block; }
+    kds-stepper kds-steps-content kds-step {
+      display: block;
+      padding: 24px; }

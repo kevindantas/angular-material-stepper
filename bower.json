@@ -1,0 +1,27 @@
+{
+  "name": "angular-material-stepper",
+  "authors": [
+    "Kevin Dantas <kevin.ds.29@gmail.com>"
+  ],
+  "description": "Steppers convey progress through numbered steps. They may also be used for navigation.",
+  "main": "",
+  "moduleType": [],
+  "keywords": [
+    "angular",
+    "angular-material",
+    "angular",
+    "stepper"
+  ],
+  "license": "MIT",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular-material": "~1.0.1"
+  }
+}
