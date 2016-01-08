@@ -6,13 +6,17 @@ angular
     .module('kds.stepper')
     .controller('KdsStepperController', KdsStepperController);
 
-function KdsStepperController ($scope, $element, $attrs, $compile, $mdTheming) {
+function KdsStepperController ($scope, $element, $attrs, $compile, $mdUtil, $mdTheming) {
 
-  var _element = angular.element($element);
   var self = this;
+  var parentScope = $scope.$parent;
 
   /** @type {number} */
-  self.currentStep = 1;
+  //self.prevStep = evalScope($attrs.currentStep);
+
+
+  /** @type {string} */
+  self.animateClass = '';
 
   /** @type {Array.<Object>} */
   self.steps = [];
@@ -22,6 +26,7 @@ function KdsStepperController ($scope, $element, $attrs, $compile, $mdTheming) {
    * @type {string}
    */
   self.defaultStepLabel = 'Step ';
+
 
   /** @type {string} */
   self.stepLabel = self.defaultStepLabel;
@@ -34,42 +39,93 @@ function KdsStepperController ($scope, $element, $attrs, $compile, $mdTheming) {
    * @type {string}
    */
   self.attrOrientation = $attrs.kdsOrientation || 'horizontal';
-
+  
   /**
    * Get the orientation that will be used in the `layout` directive from Angular Material Design
    * @type {string}
    */
   Object.defineProperty(self, 'orientation', {
     get: function() {
-      if(self.attrOrientation == 'vertical')
+
+      if(self.attrOrientation == 'vertical' || self.attrOrientation == 'column')
         return 'column';
-      else
+      else if(self.attrOrientation == 'horizontal' || self.attrOrientation == 'row')
         return 'row';
+
     },
   });
 
 
-  function init() {
-
+  /**
+   * @name evalScope
+   * @description
+   * Use the parent scope to eval the expressions
+   *
+   * @param {mixed} expression Expression to be eval
+   */
+  function evalScope (expression) {
+    return parentScope.$eval(expression);
   }
+
+
+  
+  function init () {
+    if(self.currentStep == undefined) self.currentStep = 0;
+  }
+
 
   init();
+  
 
-
-  this.compileStepper = function (contents, scope) {
-    var steps = $attrs.$kdsSteps;
-    var arr = [];
-    for (var i = 0; i < steps.length; i++) {
-      var step = {
-        label: steps[i].attributes.label,
-        html: steps[i].innerHTML
-      }
+  /**
+   * @name nextStepItem
+   * @description
+   * Go to the next step by clicking on the pagination, only work if the `kds-step-item` is not disabled
+   *
+   * @param {object} e Event triggered by the user
+   * @param {object} elemScope Scope of the current `kds-step-item`
+   */
+  this.nextStepItem = function (e, elemScope){
+    var target = e.target, item;
+    if(target.localName == 'kds-step-item'){
+      item = target;
+    } else {
+      target = $mdUtil.getClosest(target, 'kds-step-item');
     }
-    //$compile(contents)(scope);
+
+    if(!target.disabled) self.currentStep = elemScope.$index;
   }
 
 
+  /**
+   * @name isDisabled
+   * @description
+   * Disable the stepper items
+   *
+   * @param {object} elemScope Scope of the element
+   */
+  self.isDisabled = function (elemScope) {
+    return (elemScope.$index > self.currentStep+1);
+  }
+
+
+  /**
+   * @name checkPage
+   * @description
+   * Check if the page should be visible
+   */
+  self.checkPage = function ($index) {
+    return self.currentStep === $index;
+  }
+
+
+  $scope.$watch(function () {
+    return self.currentStep;
+  }, function (newVal, oldVal) {
+    if(newVal > oldVal) self.animateClass = 'animate-left-right';
+    else self.animateClass = 'animate-right-left';
+  });
 
 };
 
-KdsStepperController.$inject = ['$scope', '$element', '$attrs', '$compile', '$mdTheming'];
+KdsStepperController.$inject = ['$scope', '$element', '$attrs', '$compile', '$mdUtil', '$mdTheming'];

@@ -30,5 +30,20 @@ angular.module('myApp').config(function($mdThemingProvider) {
 });
 
 angular.module('myApp').controller('myController', function($scope) {
-  $scope.user = {};
+  $scope.myStep = 0;
+
+  $scope.steps = {
+    begin: false,
+    fillForm: false
+  };
+  $scope.a = 'daw duhawiud haw';
+
+  //console.log($scope);
+
+  $scope.isTrue = function (param) {
+    if(param !== undefined){
+      return param;
+    }
+    return true;
+  }
 });

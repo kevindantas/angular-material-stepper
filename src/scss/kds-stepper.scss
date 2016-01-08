@@ -30,12 +30,26 @@ kds-stepper {
       display: block;
       padding: 18px 0;
       position: relative !important;
+      cursor: pointer;
 
       &.disabled {
         color: rgba(0, 0, 0, .38);
         .md-fab {
           background: #9E9E9E !important;
         }
+        
+        &[disabled], &[disabled] > * {
+          cursor: no-drop;
+        }
+      }
+
+      &.active {
+        font-weight:500;
+      }
+
+      &:not(.active) {
+        font-weight:400;
+        color: rgba(0,0,0,.5);
       }
 
       &:first-child {
@@ -72,10 +86,36 @@ kds-stepper {
 
   kds-steps-content {
     display: block;
+    overflow: hidden;
+    position: relative;
+    transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.5s;
+    md-content {
+      transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.5s;
+    }
 
     kds-step {
+      width:100%;
       display: block;
       padding:24px;
+      transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.5s;
+
+      &.ng-enter{
+        transform:translateX(100%);
+      }
+
+      &.ng-enter-active{
+        transform:translateX(0);
+      }
+
+      &.ng-leave{
+        transform:translateX(0);
+        position: absolute;
+      }
+      &.ng-leave-active{
+        transform:translateX(-100%);
+      }
+
+
     }
   }
 }

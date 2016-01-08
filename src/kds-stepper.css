@@ -21,11 +21,19 @@ kds-stepper {
     kds-stepper kds-steps-wrapper kds-step-item {
       display: block;
       padding: 18px 0;
-      position: relative !important; }
+      position: relative !important;
+      cursor: pointer; }
       kds-stepper kds-steps-wrapper kds-step-item.disabled {
         color: rgba(0, 0, 0, 0.38); }
         kds-stepper kds-steps-wrapper kds-step-item.disabled .md-fab {
           background: #9E9E9E !important; }
+        kds-stepper kds-steps-wrapper kds-step-item.disabled[disabled], kds-stepper kds-steps-wrapper kds-step-item.disabled[disabled] > * {
+          cursor: no-drop; }
+      kds-stepper kds-steps-wrapper kds-step-item.active {
+        font-weight: 500; }
+      kds-stepper kds-steps-wrapper kds-step-item:not(.active) {
+        font-weight: 400;
+        color: rgba(0, 0, 0, 0.5); }
       kds-stepper kds-steps-wrapper kds-step-item:first-child {
         padding-left: 24px;
         overflow: hidden !important; }
@@ -47,7 +55,23 @@ kds-stepper {
         display: block;
         line-height: 30px; }
   kds-stepper kds-steps-content {
-    display: block; }
+    display: block;
+    overflow: hidden;
+    position: relative;
+    transition: all cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.5s; }
+    kds-stepper kds-steps-content md-content {
+      transition: all cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.5s; }
     kds-stepper kds-steps-content kds-step {
+      width: 100%;
       display: block;
-      padding: 24px; }
+      padding: 24px;
+      transition: all cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.5s; }
+      kds-stepper kds-steps-content kds-step.ng-enter {
+        transform: translateX(100%); }
+      kds-stepper kds-steps-content kds-step.ng-enter-active {
+        transform: translateX(0); }
+      kds-stepper kds-steps-content kds-step.ng-leave {
+        transform: translateX(0);
+        position: absolute; }
+      kds-stepper kds-steps-content kds-step.ng-leave-active {
+        transform: translateX(-100%); }

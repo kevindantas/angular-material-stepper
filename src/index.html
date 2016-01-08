@@ -25,22 +25,24 @@
 
 </head>
 <body ng-cloak ng-controller="myController">
+{{a}}
 <div layout="column">
   <div flex layout="row">
     <div flex="25" layout-padding>
       <h3>Flex 25</h3>
     </div>
-    <div flex="50">
-      <kds-stepper md-theme="mytheme">
-        <kds-step label="Let's Begin!">
+    <div flex="50" layout-padding>
+      <kds-stepper md-theme="mytheme" current-step="myStep">
+        <kds-step label="Let's Begin!" step-done="steps.begin" data-test="{{steps.begin}}">
+
           <h2>Step One</h2>
-
+          <h3>Here </h3>
+          {{ a }}
           <p>Click on the button bellow to continue</p>
-
-          <md-button>Let's Go!!!</md-button>
+          <md-button ng-click="steps.begin = true">Let's Go!!!</md-button>
         </kds-step>
 
-        <kds-step label="Fill the form">
+        <kds-step label="Fill the form" step-done="steps.fillForm">
           <h2>Step Two</h2>
           <form flex>
             <div layout="row">
@@ -55,7 +57,7 @@
               </md-input-container>
             </div>
 
-            <md-button class="md-raised md-primary">
+            <md-button class="md-raised md-primary" ng-click="myStep = 0" kds-next-step="true">
               Confirm
             </md-button>
           </form>
@@ -75,8 +77,8 @@
     </div>
   </div>
 
-  <div flex layout="row" layout-align="center">
-    <kds-stepper md-theme="mytheme" flex="50" class="">
+  <div flex layout="row" layout-align="center" layout-padding>
+    <kds-stepper md-theme="mytheme" flex="70" class="">
       <kds-step label="Let's Begin!">
         <h2>Step One</h2>
 
@@ -85,8 +87,8 @@
         <md-button>Let's Go!!!</md-button>
       </kds-step>
 
-      <kds-step label="Check it out">
-        <h2>Step Three</h2>
+      <kds-step label="Last Step">
+        <h2>Step Last</h2>
 
         <h3>Name: {{user.name}}</h3>
         <h5>Email: {{user.email}}</h5>
