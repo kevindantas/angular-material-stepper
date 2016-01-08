@@ -51,7 +51,7 @@ function KdsStepper($mdTheming, $compile) {
         template = templates[i];
         steps.push({
           label: label,
-          elem:  template
+          elem:  template,
         });
       }
       controller.steps = steps;
@@ -107,11 +107,6 @@ function KdsStepItem() {
   return {
     restrict: 'E',
     require:  '^kdsStepper',
-    link:     function (scope, elem, attr, controller) {
-      /*elem.on('click', function (e){
-       if(!attr.disabled) controller.currentStep = scope.$index;
-       })*/
-    }
   }
 }
 
@@ -148,9 +143,6 @@ angular
 
 function KdsStep($compile) {
   return {
-    /*scope:    {
-      done: '=stepDone'
-    },*/
     terminal: true,
     restrict: 'E',
     require:  '^kdsStepper',
@@ -167,23 +159,34 @@ function KdsStep($compile) {
       var kdsSteps    = elem.parent().children(),
           i           = Array.prototype.indexOf.call(kdsSteps, elem[0]),
           mdContent   = angular.element('<md-content></md-content>'),
-          parentScope = scope.$parent.$parent.$parent.$parent, // TODO: Check if there's a better solution
+          parentScope = scope.$parent.$parent.$parent, // TODO: Check if there's a better solution
           stepContent = $compile(stepElem.innerHTML)(parentScope);
 
 
       mdContent.append(stepContent);
       elem.append(mdContent);
-      //console.log(parentScope.$eval(attrs.stepDone));
 
+      var a = this;
+      scope.$watch(function () {
+        return parentScope.$eval(attrs.stepDone);
+      }, function (newVal, oldVal, a, b) {
+        console.log(newVal);
+        console.log(oldVal);
+        console.log(a);
+        console.log(b);
+        console.log('_________________________');
+        if(newVal && !oldVal) controller.currentStep++;
+      });
+
+
+      //console.log(parentScope.$eval(attrs.stepDone));
     },
   }
 }
-
 KdsStep.$inject = ['$compile'];
 
 
 function normalizeName(name) {
-  //var regex = /[A-Z]/+;
   var ind       = name.indexOf('-');
   name          = name.replace('-', '');
   var uppercase = name[ind].toUpperCase();

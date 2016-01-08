@@ -6,20 +6,19 @@ angular
     .module('kds.stepper')
     .controller('KdsStepperController', KdsStepperController);
 
-function KdsStepperController ($scope, $element, $attrs, $compile, $mdUtil, $mdTheming) {
+function KdsStepperController ($scope, $element, $attrs, $compile, $timeout, $mdUtil, $mdTheming) {
 
   var self = this;
   var parentScope = $scope.$parent;
 
-  /** @type {number} */
-  //self.prevStep = evalScope($attrs.currentStep);
-
-
-  /** @type {string} */
-  self.animateClass = '';
-
   /** @type {Array.<Object>} */
   self.steps = [];
+
+  /** @type {Array.<Object>} */
+  self.element = $element;
+
+  /** @type {Array.<Object>} */
+  self.attrs = $attrs;
 
   /**
    * Default label as the name of the step. e.g.: Step {{stepIndex}}
@@ -52,7 +51,7 @@ function KdsStepperController ($scope, $element, $attrs, $compile, $mdUtil, $mdT
       else if(self.attrOrientation == 'horizontal' || self.attrOrientation == 'row')
         return 'row';
 
-    },
+    }
   });
 
 
@@ -61,7 +60,7 @@ function KdsStepperController ($scope, $element, $attrs, $compile, $mdUtil, $mdT
    * @description
    * Use the parent scope to eval the expressions
    *
-   * @param {mixed} expression Expression to be eval
+   * @param {void} expression Expression to be eval
    */
   function evalScope (expression) {
     return parentScope.$eval(expression);
@@ -94,7 +93,7 @@ function KdsStepperController ($scope, $element, $attrs, $compile, $mdUtil, $mdT
     }
 
     if(!target.disabled) self.currentStep = elemScope.$index;
-  }
+  };
 
 
   /**
@@ -106,7 +105,7 @@ function KdsStepperController ($scope, $element, $attrs, $compile, $mdUtil, $mdT
    */
   self.isDisabled = function (elemScope) {
     return (elemScope.$index > self.currentStep+1);
-  }
+  };
 
 
   /**
@@ -116,16 +115,25 @@ function KdsStepperController ($scope, $element, $attrs, $compile, $mdUtil, $mdT
    */
   self.checkPage = function ($index) {
     return self.currentStep === $index;
-  }
+  };
 
 
+  // TODO: Check CSS animation
   $scope.$watch(function () {
     return self.currentStep;
   }, function (newVal, oldVal) {
-    if(newVal > oldVal) self.animateClass = 'animate-left-right';
-    else self.animateClass = 'animate-right-left';
+
+    $timeout(function () {
+      var steps = $element.find('kds-step');
+
+      if(newVal > oldVal) {
+        steps.addClass('kds-left').removeClass('kds-right');
+      } else {
+        steps.addClass('kds-right').removeClass('kds-left');
+      }
+    })
   });
 
-};
+}
 
-KdsStepperController.$inject = ['$scope', '$element', '$attrs', '$compile', '$mdUtil', '$mdTheming'];
+KdsStepperController.$inject = ['$scope', '$element', '$attrs', '$compile', '$timeout', '$mdUtil', '$mdTheming'];
