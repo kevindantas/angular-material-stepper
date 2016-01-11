@@ -8,18 +8,8 @@
 
   <!-- Angular Material requires Angular.js Libraries -->
   <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
-  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-animate.min.js"></script>
-  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-aria.min.js"></script>
-  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-messages.min.js"></script>
-
-  <script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.0.0/angular-material.min.js"></script>
 
   <link rel="stylesheet" href="../src/kds-stepper.css">
-  <script src="../bower_components/angular-material/modules/js/tabs/tabs.js"></script>
-
-
-  <script src="../kds-stepper.min.js"></script>
-  <script src="app.js"></script>
 
 </head>
 <body ng-cloak ng-controller="myController">
@@ -29,11 +19,19 @@
       <h1>Horizontal</h1>
       <kds-stepper md-theme="mytheme">
         <kds-step label="Let's Begin!" step-done="steps.begin">
+          <form action="#" layout="column">
 
-          <h2>Step One</h2>
-          <h3>Here </h3>
-          <p>Click on the button bellow to continue</p>
-          <md-button ng-click="steps.begin = true">Let's Go!!!</md-button>
+            <h2>First Time!</h2>
+            <h3>Here </h3>
+            <p>You can click on the button bellow to go to the next step after you agree the term and conditions</p>
+
+            <md-checkbox ng-click="user.accept = true">
+              Accept the term and conditions
+            </md-checkbox>
+            <div layout="row">
+              <md-button class="md-primary md-raised" ng-click="steps.begin = true">Let's Go!!!</md-button>
+            </div>
+          </form>
         </kds-step>
 
         <kds-step label="Fill the form" step-done="steps.fillForm">
@@ -51,7 +49,7 @@
               </md-input-container>
             </div>
 
-            <md-button class="md-raised md-primary" ng-click="myStep = 0" kds-next-step="true">
+            <md-button class="md-raised md-primary" ng-click="myStep = 0">
               Confirm
             </md-button>
           </form>
@@ -89,18 +87,38 @@
   </div>
 
   <div flex layout="row" layout-align="center center">
-      <md-tabs flex="90">
-        <md-tab label="Tab 1">
-          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. A aliquam architecto eligendi laudantium natus necessitatibus omnis perspiciatis qui repudiandae vel. Ab ad culpa doloribus ipsum labore omnis quam sit suscipit.</p>
-          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. A aliquam architecto eligendi laudantium natus necessitatibus omnis perspiciatis qui repudiandae vel. Ab ad culpa doloribus ipsum labore omnis quam sit suscipit.</p>
-        </md-tab>
-        <md-tab label="Tab 2">
-          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. A aliquam architecto eligendi laudantium natus necessitatibus omnis perspiciatis qui repudiandae vel. Ab ad culpa doloribus ipsum labore omnis quam sit suscipit.</p>
-          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. A aliquam architecto eligendi laudantium natus necessitatibus omnis perspiciatis qui repudiandae vel. Ab ad culpa doloribus ipsum labore omnis quam sit suscipit.</p>
-        </md-tab>
-      </md-tabs>
+    <md-tabs flex="90">
+      <md-tab label="Tab 1">
+
+        <p flex="50">Lorem ipsum dolor sit amet, consectetur adipisicing elit. A aliquam architecto eligendi laudantium
+          natus necessitatibus omnis perspiciatis qui repudiandae vel. Ab ad culpa doloribus ipsum labore omnis quam sit
+          suscipit.</p>
+        <p flex="50">Lorem ipsum dolor sit amet, consectetur adipisicing elit. A aliquam architecto eligendi laudantium
+          natus necessitatibus omnis perspiciatis qui repudiandae vel. Ab ad culpa doloribus ipsum labore omnis quam sit
+          suscipit.</p>
+
+      </md-tab>
+      <md-tab label="Tab 2">
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. A aliquam architecto eligendi laudantium natus
+          necessitatibus omnis perspiciatis qui repudiandae vel. Ab ad culpa doloribus ipsum labore omnis quam sit
+          suscipit.</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. A aliquam architecto eligendi laudantium natus
+          necessitatibus omnis perspiciatis qui repudiandae vel. Ab ad culpa doloribus ipsum labore omnis quam sit
+          suscipit.</p>
+      </md-tab>
+    </md-tabs>
   </div>
 </div>
 
+
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-animate.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-aria.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-messages.min.js"></script>
+
+<script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.0.0/angular-material.min.js"></script>
+
+<script src="../bower_components/angular-material/modules/js/tabs/tabs.js"></script>
+<script src="../kds-stepper.js"></script>
+<script src="app.js"></script>
 </body>
 </html>

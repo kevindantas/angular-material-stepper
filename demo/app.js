@@ -36,7 +36,10 @@ angular.module('myApp').controller('myController', function($scope) {
     begin: false,
     fillForm: false
   };
-  $scope.a = 'daw duhawiud haw';
+
+
+  $scope.user = {};
+
 
   //console.log($scope);
 
