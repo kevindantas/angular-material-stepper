@@ -5,6 +5,7 @@ var sass = require('gulp-sass');
 var uglify = require('gulp-uglify');
 var concat = require('gulp-concat');
 var rename = require('gulp-rename');
+var server = require('gulp-webserver');
 
 
 /*gulp.task('minify', function () {
@@ -35,10 +36,17 @@ gulp.task('sass', function () {
       .pipe(gulp.dest('./src'));
 });
 
-gulp.task('sass:watch', function () {
-  gulp.src('./src/scss/*.scss', ['sass'])
-});
 
-gulp.task('default', ['sass', 'concat', 'compress'], function () {
+gulp.task('server', function () {
+  gulp.src('./')
+    .pipe(server({
+      host: '0.0.0.0'
+    }))
+})
+
+
+gulp.task('default', ['sass', 'concat', 'server'], function () {
   gulp.watch('./src/scss/*.scss', ['sass']);
+
+  gulp.watch('./src/*.js', ['concat']);
 });
