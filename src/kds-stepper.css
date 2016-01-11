@@ -30,7 +30,7 @@ kds-stepper {
         kds-stepper kds-steps-wrapper kds-step-item.disabled[disabled], kds-stepper kds-steps-wrapper kds-step-item.disabled[disabled] > * {
           cursor: no-drop; }
       kds-stepper kds-steps-wrapper kds-step-item.active {
-        font-weight: 500; }
+        font-weight: 700; }
       kds-stepper kds-steps-wrapper kds-step-item:not(.active) {
         font-weight: 400;
         color: rgba(0, 0, 0, 0.5); }

@@ -147,9 +147,9 @@ function KdsStep($compile) {
     restrict: 'E',
     require:  '^kdsStepper',
     link:     function (scope, elem, attrs, controller) {
+      //ng-if="$kdsStepperCtrl.checkPage($index)" ng-repeat="step in $kdsStepperCtrl.steps"
 
       var stepElem      = scope.$parent.step.elem,
-          attributes    = [],
           attributesMap = stepElem.attributes;
 
       for (var j = 0; j < attributesMap.length; j++) {
@@ -165,22 +165,18 @@ function KdsStep($compile) {
 
       mdContent.append(stepContent);
       elem.append(mdContent);
-
       var a = this;
+
+      // Go to the next step if close the actual step
       scope.$watch(function () {
         return parentScope.$eval(attrs.stepDone);
       }, function (newVal, oldVal, a, b) {
-        console.log(newVal);
-        console.log(oldVal);
-        console.log(a);
-        console.log(b);
-        console.log('_________________________');
-        if(newVal && !oldVal) controller.currentStep++;
+        if(newVal && !oldVal) {
+          controller.steps[controller.currentStep].done = true;
+          controller.currentStep++;
+        }
       });
-
-
-      //console.log(parentScope.$eval(attrs.stepDone));
-    },
+    }
   }
 }
 KdsStep.$inject = ['$compile'];
@@ -188,10 +184,13 @@ KdsStep.$inject = ['$compile'];
 
 function normalizeName(name) {
   var ind       = name.indexOf('-');
-  name          = name.replace('-', '');
-  var uppercase = name[ind].toUpperCase();
-  name          = name.split('');
-  name[ind]     = uppercase;
-  name          = name.join('');
+
+  if (ind > -1) {
+    name          = name.replace('-', '');
+    var uppercase = name[ind].toUpperCase();
+    name          = name.split('');
+    name[ind]     = uppercase;
+    name          = name.join('');
+  }
   return name;
 }
