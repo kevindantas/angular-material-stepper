@@ -29,7 +29,7 @@ angular.module('myApp').config(function($mdThemingProvider) {
       .primaryPalette('myNewPaletteName')
 });
 
-angular.module('myApp').controller('myController', function($scope) {
+angular.module('myApp').controller('myController', function($scope){
   $scope.myStep = 0;
 
   $scope.steps = {
