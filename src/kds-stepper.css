@@ -65,13 +65,57 @@ kds-stepper {
       width: 100%;
       display: block;
       padding: 24px;
-      transition: all cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.5s; }
-      kds-stepper kds-steps-content kds-step.ng-enter {
-        transform: translateX(100%); }
-      kds-stepper kds-steps-content kds-step.ng-enter-active {
-        transform: translateX(0); }
-      kds-stepper kds-steps-content kds-step.ng-leave {
-        transform: translateX(0);
-        position: absolute; }
-      kds-stepper kds-steps-content kds-step.ng-leave-active {
-        transform: translateX(-100%); }
+      /*&.ng-enter{
+        transform:translateX(100%);
+      }
+
+      &.ng-enter-active{
+        transform:translateX(0);
+      }
+
+      &.ng-leave{
+        transform:translateX(0);
+        position: absolute;
+      }
+      &.ng-leave-active{
+        transform:translateX(-100%);
+      }
+      */ }
+
+@keyframes kds-left {
+  from {
+    transform: translateX(100%); }
+  to {
+    transform: translateX(0); } }
+
+@keyframes kds-right {
+  from {
+    transform: translateX(-100%); }
+  to {
+    transform: translateX(0); } }
+
+@keyframes kds-left-leave {
+  from {
+    transform: translateX(0); }
+  to {
+    transform: translateX(-100%); } }
+
+@keyframes kds-right-leave {
+  from {
+    transform: translateX(0); }
+  to {
+    transform: translateX(100%); } }
+      kds-stepper kds-steps-content kds-step.kds-right {
+        transition: all cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.5s;
+        animation: kds-right .5s; }
+        kds-stepper kds-steps-content kds-step.kds-right.ng-leave {
+          position: absolute;
+          top: 0;
+          animation: kds-right-leave .5s; }
+      kds-stepper kds-steps-content kds-step.kds-left {
+        transition: all cubic-bezier(0.94, 0.45, 0.46, 0.25) 0.5s;
+        animation: kds-left .5s; }
+        kds-stepper kds-steps-content kds-step.kds-left.ng-leave {
+          position: absolute;
+          top: 0;
+          animation: kds-left-leave .5s; }
