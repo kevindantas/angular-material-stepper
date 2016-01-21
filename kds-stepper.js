@@ -191,7 +191,7 @@ function KdsStepper($mdTheming, $compile) {
       attr.$kdsSteps = steps;
       return '' +
         '<kds-steps-wrapper layout="{{$kdsStepperCtrl.orientation}}"> </kds-steps-wrapper>' +
-        '<kds-steps-content>' +
+        '<kds-steps-content ng-transclude>' +
         '<kds-step ng-if="$kdsStepperCtrl.checkPage($index)" ng-repeat="step in $kdsStepperCtrl.steps"></kds-step>' +
         '</kds-steps-content>';
     },
