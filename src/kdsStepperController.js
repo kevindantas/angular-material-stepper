@@ -33,6 +33,7 @@ function KdsStepperController ($scope, $element, $attrs, $compile, $timeout, $md
   /** @type {Array.<Object>} */
   self.doneSteps = [];
 
+
   /**
    * Get the value from the kdsOrientation attribute
    * @type {string}
@@ -77,14 +78,14 @@ function KdsStepperController ($scope, $element, $attrs, $compile, $timeout, $md
   
 
   /**
-   * @name nextStepItem
+   * @name changeStepItem
    * @description
    * Go to the next step by clicking on the pagination, only work if the `kds-step-item` is not disabled
    *
    * @param {object} e Event triggered by the user
    * @param {object} elemScope Scope of the current `kds-step-item`
    */
-  this.nextStepItem = function (e, elemScope){
+  this.changeStepItem = function (e, elemScope){
     var target = e.target, item;
     if(target.localName == 'kds-step-item'){
       item = target;
@@ -101,10 +102,45 @@ function KdsStepperController ($scope, $element, $attrs, $compile, $timeout, $md
    * @description
    * Disable the stepper items
    *
-   * @param {object} elemScope Scope of the element
+   * @param {object} elemScope Scope of the element to be checked
    */
-  self.isDisabled = function (elemScope) {
-    return (elemScope.$index > self.currentStep+1);
+  self.isDisabled = function (elemScope){
+    var step, previousStep, nextStep, isRequired = false;
+
+    var currentIndex =  elemScope.$index;
+    var currentStep =  elemScope.step;
+
+    var count = {
+      required: 0,
+      requiredDone: 0
+    };
+
+    if(currentStep.done) return false;
+    
+    if(currentIndex > 0) {
+      previousStep = self.steps[elemScope.$index-1];
+      if(previousStep.done) return false;
+    }
+
+    if(currentIndex < self.steps.length - 1)
+      nextStep = self.steps[elemScope.$index+1];
+
+    for (var i = 0; i < self.steps.length; i++){
+      step = self.steps[i];
+
+      count.required += step.required ? 1 : 0;
+
+
+      isRequired = step.required && self.currentStep != elemScope.$index;
+
+
+      if(step.required && self.currentStep != elemScope.$index) return true;
+
+      /* if(self.currentStep > elemScope.$index) return false; */
+    }
+    //console.log(count);
+    console.log(count);
+    return isRequired;
   };
 
 
@@ -118,7 +154,6 @@ function KdsStepperController ($scope, $element, $attrs, $compile, $timeout, $md
   };
 
 
-  // TODO: Check CSS animation
   $scope.$watch(function () {
     return self.currentStep;
   }, function (newVal, oldVal) {

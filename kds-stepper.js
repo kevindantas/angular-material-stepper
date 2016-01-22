@@ -5,15 +5,31 @@
 angular.module('kds.stepper', ['ngMaterial'])
   .config(function ($mdIconProvider) {
     $mdIconProvider.icon(iconDone.id, iconDone.url, 24);
+    $mdIconProvider.icon(iconWarning.id, iconWarning.url, 24);
+    $mdIconProvider.icon(iconError.id, iconError.url, 24);
   })
   .run(function ($http, $templateCache) {
     $templateCache.put(iconDone.url, iconDone.svg);
+    $templateCache.put(iconWarning.url, iconWarning.svg);
+    $templateCache.put(iconError.url, iconError.svg);
   });
 
 var iconDone = {
   id:  'md-done',
   url: 'md-done.svg',
   svg: '<svg fill="#fff" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"> <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/> </svg>>'
+};
+
+var iconWarning = {
+  id:  'md-warning',
+  url: 'md-warning.svg',
+  svg: '<svg fill="#fff" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"> <path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/> </svg>'
+};
+
+var iconError = {
+  id:  'md-error',
+  url: 'md-error.svg',
+  svg: '<svg fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"> <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/> </svg>'
 };
 /**
  * @ngdoc controller
@@ -49,6 +65,7 @@ function KdsStepperController ($scope, $element, $attrs, $compile, $timeout, $md
 
   /** @type {Array.<Object>} */
   self.doneSteps = [];
+
 
   /**
    * Get the value from the kdsOrientation attribute
@@ -94,14 +111,14 @@ function KdsStepperController ($scope, $element, $attrs, $compile, $timeout, $md
   
 
   /**
-   * @name nextStepItem
+   * @name changeStepItem
    * @description
    * Go to the next step by clicking on the pagination, only work if the `kds-step-item` is not disabled
    *
    * @param {object} e Event triggered by the user
    * @param {object} elemScope Scope of the current `kds-step-item`
    */
-  this.nextStepItem = function (e, elemScope){
+  this.changeStepItem = function (e, elemScope){
     var target = e.target, item;
     if(target.localName == 'kds-step-item'){
       item = target;
@@ -118,10 +135,45 @@ function KdsStepperController ($scope, $element, $attrs, $compile, $timeout, $md
    * @description
    * Disable the stepper items
    *
-   * @param {object} elemScope Scope of the element
+   * @param {object} elemScope Scope of the element to be checked
    */
-  self.isDisabled = function (elemScope) {
-    return (elemScope.$index > self.currentStep+1);
+  self.isDisabled = function (elemScope){
+    var step, previousStep, nextStep, isRequired = false;
+
+    var currentIndex =  elemScope.$index;
+    var currentStep =  elemScope.step;
+
+    var count = {
+      required: 0,
+      requiredDone: 0
+    };
+
+    if(currentStep.done) return false;
+    
+    if(currentIndex > 0) {
+      previousStep = self.steps[elemScope.$index-1];
+      if(previousStep.done) return false;
+    }
+
+    if(currentIndex < self.steps.length - 1)
+      nextStep = self.steps[elemScope.$index+1];
+
+    for (var i = 0; i < self.steps.length; i++){
+      step = self.steps[i];
+
+      count.required += step.required ? 1 : 0;
+
+
+      isRequired = step.required && self.currentStep != elemScope.$index;
+
+
+      if(step.required && self.currentStep != elemScope.$index) return true;
+
+      /* if(self.currentStep > elemScope.$index) return false; */
+    }
+    //console.log(count);
+    console.log(count);
+    return isRequired;
   };
 
 
@@ -135,7 +187,6 @@ function KdsStepperController ($scope, $element, $attrs, $compile, $timeout, $md
   };
 
 
-  // TODO: Check CSS animation
   $scope.$watch(function () {
     return self.currentStep;
   }, function (newVal, oldVal) {
@@ -171,6 +222,7 @@ KdsStepperController.$inject = ['$scope', '$element', '$attrs', '$compile', '$ti
  *  </hljs>
  *
  *  @param {=string} kds-orientation Stepper orientation
+ *  @param {=integer} current-step Active step
  */
 angular
   .module('kds.stepper')
@@ -191,23 +243,33 @@ function KdsStepper($mdTheming, $compile) {
       attr.$kdsSteps = steps;
       return '' +
         '<kds-steps-wrapper layout="{{$kdsStepperCtrl.orientation}}"> </kds-steps-wrapper>' +
-        '<kds-steps-content ng-transclude>' +
+        '<kds-steps-content>' +
         '<kds-step ng-if="$kdsStepperCtrl.checkPage($index)" ng-repeat="step in $kdsStepperCtrl.steps"></kds-step>' +
         '</kds-steps-content>';
+
     },
     link:             function (scope, elem, attr, controller, transclude) {
       var stepper   = elem.contents(),
           templates = attr.$kdsSteps,
           steps     = [],
-          label, template;
+          label, template, optional;
 
       for (var i = 0; i < templates.length; i++) {
-        label = templates[i].getAttribute('label');
-        templates[i].removeAttribute('label');
         template = templates[i];
+
+        label = template.getAttribute('label');
+        template.removeAttribute('label');
+
+
+        var attrOptional = template.getAttribute('step-optional');
+        optional         = attrOptional == "" || attrOptional == true;
+
+
         steps.push({
-          label: label,
-          elem:  template,
+          label:    label,
+          elem:     template,
+          done:     false,
+          optional: optional
         });
       }
       controller.steps = steps;
@@ -228,43 +290,47 @@ KdsStepper.$inject = ['$mdTheming', '$compile'];
 angular.module('kds.stepper')
   .directive('kdsStepsWrapper', KdsStepperWrapper);
 
-function KdsStepperWrapper() {
+function KdsStepperWrapper($compile) {
   return {
     restrict: 'E',
     require:  '^kdsStepper',
     template: function () {
       return '' +
         '<kds-step-item flex layout="row" layout-align="center center" ng-repeat="step in $kdsStepperCtrl.steps" ' +
-        'ng-disabled="$kdsStepperCtrl.isDisabled(this)" kds-step-done="true" ng-click="$kdsStepperCtrl.nextStepItem($event, this)"' +
-        'ng-class="{active: $index == $kdsStepperCtrl.currentStep, disabled: $index > $kdsStepperCtrl.currentStep+1}" md-ink-ripple="#aaa">' +
-        '<md-button flex="none" class="md-fab md-mini md-primary"  md-no-ink  aria-label="{{step.attrs.kdsLabel}}"' +
-        'ng-disabled="$kdsStepperCtrl.isDisabled(this)">' +
-        '<md-icon md-svg-icon="md-done" ng-show="step.done"></md-icon> <span ng-show="!step.done">{{ ($index + 1) }}</span> ' +
+        'ng-disabled="$kdsStepperCtrl.isDisabled(this)" kds-step-done="true" ng-click="$kdsStepperCtrl.changeStepItem($event, this)"' +
+        'ng-class="{active: $index == $kdsStepperCtrl.currentStep}" md-ink-ripple="#aaa">' +
+        '<md-button flex="none" class="md-fab md-mini md-primary"  md-no-ink  aria-label="{{step.attrs.kdsLabel}}">' +
+        '<md-icon md-svg-icon="md-done" ng-show="step.done"></md-icon>' +
+        '<md-icon md-svg-icon="md-warning" ng-show="step.warning"></md-icon>' +
+        '<md-icon md-svg-icon="md-error" ng-show="step.error"></md-icon>' +
+        '<span ng-show="!step.done">{{ ($index + 1) }}</span> ' +
         '</md-button>' +
         '<span flex="none"> {{ step.label ||  $kdsStepperCtrl.stepLabel + ($index+1) }}  </span>' +
         '<span flex style="height: 1px; background:rgba(0,0,0,.15); margin-left: 8px"></span> ' +
         '</kds-step-item>';
-    },
+    }
   }
 }
 
+/*
 
-/**
+ /!**
  * @ngdoc directive
  * @name kdsStepsWrapper
  * @description
  * The wrapper for the steps pagination
  * @restrict E
- */
-angular.module('kds.stepper')
-  .directive('kdsStepItem', KdsStepItem);
+ *!/
+ angular.module('kds.stepper')
+ .directive('kdsStepItem', KdsStepItem);
 
-function KdsStepItem() {
-  return {
-    restrict: 'E',
-    require:  '^kdsStepper',
-  }
-}
+ function KdsStepItem() {
+ return {
+ restrict: 'E',
+ require:  '^kdsStepper'
+ }
+ }
+ */
 
 
 /**
@@ -278,13 +344,24 @@ function KdsStepItem() {
 angular.module('kds.stepper')
   .directive('kdsStepsContent', kdsStepsContent);
 
-function kdsStepsContent() {
+function kdsStepsContent($compile) {
   return {
     restrict: 'E',
-    require:  '^kdsStepper'
+    require:  '^kdsStepper',
+    //terminal: true,
+    /*link:     function (scope, elem, attr, controller) {
+     //'<kds-step ng-if="$kdsStepperCtrl.checkPage($index)" ng-repeat="step in $kdsStepperCtrl.steps"></kds-step>' +
+     var parentScope = scope.$parent;
+     for (var i = 0; i < controller.steps.length; i++) {
+     var step     = controller.steps[i];
+     var stepHtml = step.elem.outerHTML;
+     var compiled = $compile(stepHtml)(parentScope);
+
+     }
+     }*/
   };
 }
-
+kdsStepsContent.$inject = ['$compile'];
 
 /**
  * @ngdoc directive
@@ -292,6 +369,9 @@ function kdsStepsContent() {
  * @description
  * The directive `<kds-stepper>` serves as the container for `<kds-step>` child directives to produces a Stepper component.
  * @restrict E
+ *
+ *
+ * @param {=boolean} stepOptional If the  step is required the following steps will be disabled
  */
 angular
   .module('kds.stepper')
@@ -304,7 +384,6 @@ function KdsStep($compile) {
     require:  '^kdsStepper',
     link:     function (scope, elem, attrs, controller) {
       //ng-if="$kdsStepperCtrl.checkPage($index)" ng-repeat="step in $kdsStepperCtrl.steps"
-
       var stepElem      = scope.$parent.step.elem,
           attributesMap = stepElem.attributes;
 
@@ -314,24 +393,37 @@ function KdsStep($compile) {
 
       var kdsSteps    = elem.parent().children(),
           i           = Array.prototype.indexOf.call(kdsSteps, elem[0]),
-          mdContent   = angular.element('<md-content></md-content>'),
           parentScope = scope.$parent.$parent.$parent, // TODO: Check if there's a better solution
           stepContent = $compile(stepElem.innerHTML)(parentScope);
 
+      elem.append(stepContent);
 
-      mdContent.append(stepContent);
-      elem.append(mdContent);
-      var a = this;
 
       // Go to the next step if close the actual step
       scope.$watch(function () {
         return parentScope.$eval(attrs.stepDone);
-      }, function (newVal, oldVal, a, b) {
-        if(newVal && !oldVal) {
+      }, function (newVal, oldVal) {
+        if (newVal && !oldVal) {
           controller.steps[controller.currentStep].done = true;
           controller.currentStep++;
         }
       });
+
+
+      // Indicate warning icon
+      scope.$watch(function () {
+        return parentScope.$eval(attrs.stepWarning);
+      }, function (newVal, oldVal) {
+        if (newVal) controller.steps[controller.currentStep].warning = true;
+      });
+
+      scope.$watch(function () {
+        return parentScope.$eval(attrs.stepError);
+      }, function (newVal, oldVal) {
+        if (newVal) controller.steps[controller.currentStep].error = true;
+      });
+
+
     }
   }
 }
@@ -339,7 +431,7 @@ KdsStep.$inject = ['$compile'];
 
 
 function normalizeName(name) {
-  var ind       = name.indexOf('-');
+  var ind = name.indexOf('-');
 
   if (ind > -1) {
     name          = name.replace('-', '');

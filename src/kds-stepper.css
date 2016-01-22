@@ -23,11 +23,11 @@ kds-stepper {
       padding: 18px 0;
       position: relative !important;
       cursor: pointer; }
-      kds-stepper kds-steps-wrapper kds-step-item.disabled {
+      kds-stepper kds-steps-wrapper kds-step-item.disabled, kds-stepper kds-steps-wrapper kds-step-item[disabled] {
         color: rgba(0, 0, 0, 0.38); }
-        kds-stepper kds-steps-wrapper kds-step-item.disabled .md-fab {
+        kds-stepper kds-steps-wrapper kds-step-item.disabled .md-fab, kds-stepper kds-steps-wrapper kds-step-item[disabled] .md-fab {
           background: #9E9E9E !important; }
-        kds-stepper kds-steps-wrapper kds-step-item.disabled[disabled], kds-stepper kds-steps-wrapper kds-step-item.disabled[disabled] > * {
+        kds-stepper kds-steps-wrapper kds-step-item.disabled[disabled], kds-stepper kds-steps-wrapper kds-step-item.disabled[disabled] > *, kds-stepper kds-steps-wrapper kds-step-item[disabled][disabled], kds-stepper kds-steps-wrapper kds-step-item[disabled][disabled] > * {
           cursor: no-drop; }
       kds-stepper kds-steps-wrapper kds-step-item.active {
         font-weight: 700; }
@@ -49,7 +49,7 @@ kds-stepper {
         width: 20px;
         height: 20px;
         display: block;
-        margin-top: 0px;
+        margin-top: 2px;
         margin-left: -2px; }
       kds-stepper kds-steps-wrapper .md-fab span {
         display: block;
@@ -65,22 +65,7 @@ kds-stepper {
       width: 100%;
       display: block;
       padding: 24px;
-      /*&.ng-enter{
-        transform:translateX(100%);
-      }
-
-      &.ng-enter-active{
-        transform:translateX(0);
-      }
-
-      &.ng-leave{
-        transform:translateX(0);
-        position: absolute;
-      }
-      &.ng-leave-active{
-        transform:translateX(-100%);
-      }
-      */ }
+      box-sizing: border-box; }
 
 @keyframes kds-left {
   from {
