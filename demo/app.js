@@ -29,24 +29,33 @@ angular.module('myApp').config(function($mdThemingProvider) {
       .primaryPalette('myNewPaletteName')
 });
 
-angular.module('myApp').controller('myController', function($scope){
-  $scope.myStep = 0;
+angular.module('myApp').controller('myController', function($scope, $timeout){
 
   $scope.steps = {
-    begin: false,
-    fillForm: false
+    begin: {},
+    fillForm: {}
   };
 
 
   $scope.user = {};
 
 
-  //console.log($scope);
+  /**
+   * @description
+   * Function to sign up the user
+   */
+  $scope.signUp = function (param) {
+    $scope.steps.fillForm.loading = true;
 
-  $scope.isTrue = function (param) {
-    if(param !== undefined){
-      return param;
-    }
-    return true;
+
+    // Simulate time for the request the API
+    $timeout(function (){
+      //$scope.steps.fillForm.warning = true;
+      $scope.steps.fillForm.loading = false;
+      $scope.steps.fillForm.done = true;
+    }, 5000);
+
   }
+
+
 });
