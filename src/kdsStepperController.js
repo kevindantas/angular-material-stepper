@@ -93,6 +93,7 @@ function KdsStepperController ($scope, $element, $attrs, $compile, $timeout, $md
     }
 
     if(!target.disabled) self.currentStep = elemScope.$index;
+
   };
 
 
@@ -133,7 +134,6 @@ function KdsStepperController ($scope, $element, $attrs, $compile, $timeout, $md
       }
     })
   });
-
 }
 
 KdsStepperController.$inject = ['$scope', '$element', '$attrs', '$compile', '$timeout', '$mdUtil', '$mdTheming'];
