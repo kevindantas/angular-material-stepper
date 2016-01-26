@@ -105,26 +105,6 @@ function KdsStepperWrapper($compile) {
   }
 }
 
-/*
-
- /!**
- * @ngdoc directive
- * @name kdsStepsWrapper
- * @description
- * The wrapper for the steps pagination
- * @restrict E
- *!/
- angular.module('kds.stepper')
- .directive('kdsStepItem', KdsStepItem);
-
- function KdsStepItem() {
- return {
- restrict: 'E',
- require:  '^kdsStepper'
- }
- }
- */
-
 
 /**
  * @ngdoc directive
@@ -140,21 +120,11 @@ angular.module('kds.stepper')
 function kdsStepsContent($compile) {
   return {
     restrict: 'E',
-    require:  '^kdsStepper',
-    //terminal: true,
-    /*link:     function (scope, elem, attr, controller) {
-     //'<kds-step ng-if="$kdsStepperCtrl.checkPage($index)" ng-repeat="step in $kdsStepperCtrl.steps"></kds-step>' +
-     var parentScope = scope.$parent;
-     for (var i = 0; i < controller.steps.length; i++) {
-     var step     = controller.steps[i];
-     var stepHtml = step.elem.outerHTML;
-     var compiled = $compile(stepHtml)(parentScope);
-
-     }
-     }*/
+    require:  '^kdsStepper'
   };
 }
 kdsStepsContent.$inject = ['$compile'];
+
 
 /**
  * @ngdoc directive
@@ -196,11 +166,15 @@ function KdsStep($compile) {
       scope.$watch(function () {
         return parentScope.$eval(attrs.stepDone);
       }, function (newVal, oldVal) {
+        if(controller.steps[controller.currentStep]){
+          
+        }
         if (newVal && !oldVal) {
           controller.steps[controller.currentStep].done = true;
           controller.currentStep++;
         }
       });
+      
 
 
       // Indicate warning icon
@@ -223,6 +197,13 @@ function KdsStep($compile) {
 KdsStep.$inject = ['$compile'];
 
 
+/**
+ * @description
+ * Transform a string with dash(-) separation into camelCase
+ *
+ * @param {string} name - string that should be normalized
+ * @returns string
+ */
 function normalizeName(name) {
   var ind = name.indexOf('-');
 

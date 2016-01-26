@@ -24,12 +24,9 @@
             <h2>First Time!</h2>
             <h3>Here </h3>
 
-            <samp>
-              <p> FAWEF AWE FAWE</p>
-            </samp>
             <p>You can click on the button bellow to go to the next step after you agree the term and conditions</p>
 
-            <md-checkbox required ng-click="user.accept = true">
+            <md-checkbox required ng-model="user.accept">
               Accept the term and conditions
             </md-checkbox>
             <div layout="row" layout-align="">
@@ -38,7 +35,7 @@
           </form>
         </kds-step>
 
-        <kds-step label="Fill the form" step-warning="steps.fillForm.warning"  step-done="steps.fillForm.done" >
+        <kds-step label="Fill the form" step-warning="steps.fillForm.warning"  step-done="steps.fillForm.done" step-optional>
           <h2>Step Two</h2>
           <form name="randomForm" flex ng-submit="signUp()">
             <div layout="row" flex>

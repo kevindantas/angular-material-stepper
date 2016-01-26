@@ -3,12 +3,12 @@
  * @name stepperController
  */
 angular
-    .module('kds.stepper')
-    .controller('KdsStepperController', KdsStepperController);
+  .module('kds.stepper')
+  .controller('KdsStepperController', KdsStepperController);
 
-function KdsStepperController ($scope, $element, $attrs, $compile, $timeout, $mdUtil, $mdTheming) {
+function KdsStepperController($scope, $element, $attrs, $compile, $timeout, $mdUtil, $mdTheming) {
 
-  var self = this;
+  var self        = this;
   var parentScope = $scope.$parent;
 
   /** @type {Array.<Object>} */
@@ -26,30 +26,28 @@ function KdsStepperController ($scope, $element, $attrs, $compile, $timeout, $md
    */
   self.defaultStepLabel = 'Step ';
 
-
   /** @type {string} */
   self.stepLabel = self.defaultStepLabel;
 
   /** @type {Array.<Object>} */
   self.doneSteps = [];
 
-
   /**
    * Get the value from the kdsOrientation attribute
    * @type {string}
    */
   self.attrOrientation = $attrs.kdsOrientation || 'horizontal';
-  
+
   /**
    * Get the orientation that will be used in the `layout` directive from Angular Material Design
    * @type {string}
    */
   Object.defineProperty(self, 'orientation', {
-    get: function() {
+    get: function () {
 
-      if(self.attrOrientation == 'vertical' || self.attrOrientation == 'column')
+      if (self.attrOrientation == 'vertical' || self.attrOrientation == 'column')
         return 'column';
-      else if(self.attrOrientation == 'horizontal' || self.attrOrientation == 'row')
+      else if (self.attrOrientation == 'horizontal' || self.attrOrientation == 'row')
         return 'row';
 
     }
@@ -63,19 +61,18 @@ function KdsStepperController ($scope, $element, $attrs, $compile, $timeout, $md
    *
    * @param {void} expression Expression to be eval
    */
-  function evalScope (expression) {
+  function evalScope(expression) {
     return parentScope.$eval(expression);
   }
 
 
-  
-  function init () {
-    if(self.currentStep == undefined) self.currentStep = 0;
+  function init() {
+    if (self.currentStep == undefined) self.currentStep = 0;
   }
 
 
   init();
-  
+
 
   /**
    * @name changeStepItem
@@ -85,62 +82,50 @@ function KdsStepperController ($scope, $element, $attrs, $compile, $timeout, $md
    * @param {object} e Event triggered by the user
    * @param {object} elemScope Scope of the current `kds-step-item`
    */
-  this.changeStepItem = function (e, elemScope){
+  this.changeStepItem = function (e, elemScope) {
     var target = e.target, item;
-    if(target.localName == 'kds-step-item'){
+    if (target.localName == 'kds-step-item') {
       item = target;
     } else {
       target = $mdUtil.getClosest(target, 'kds-step-item');
     }
 
-    if(!target.disabled) self.currentStep = elemScope.$index;
+    if (!target.disabled) self.currentStep = elemScope.$index;
   };
 
 
   /**
    * @name isDisabled
    * @description
-   * Disable the stepper items
+   * Disable the stepper items that are not optional
    *
    * @param {object} elemScope Scope of the element to be checked
    */
   self.isDisabled = function (elemScope){
-    var step, previousStep, nextStep, isRequired = false;
+    var step, previousStep, nextStep, isOptional = false;
 
-    var currentIndex =  elemScope.$index;
-    var currentStep =  elemScope.step;
+    var currentIndex = elemScope.$index, // Current index of the element to be checked
+        currentStep  = elemScope.step;    // Current step to be checked
 
-    var count = {
-      required: 0,
-      requiredDone: 0
-    };
-
-    if(currentStep.done) return false;
-    
-    if(currentIndex > 0) {
-      previousStep = self.steps[elemScope.$index-1];
-      if(previousStep.done) return false;
+    if (currentStep.done) return false;
+    if (currentIndex > 0){
+      previousStep       = self.steps[elemScope.$index - 1];
+      previousStep.index = elemScope.$index - 1;
+      if (previousStep.done) return false;
     }
 
-    if(currentIndex < self.steps.length - 1)
-      nextStep = self.steps[elemScope.$index+1];
+    if (currentIndex < self.steps.length - 1)
+      nextStep = self.steps[elemScope.$index + 1];
 
     for (var i = 0; i < self.steps.length; i++){
       step = self.steps[i];
 
-      count.required += step.required ? 1 : 0;
+      if (previousStep !== undefined && previousStep.optional && self.currentStep == previousStep.index) return false;
 
+      if ((!step.optional && self.currentStep != elemScope.$index) && (!step.optional && self.currentStep != elemScope.$index)) return true;
 
-      isRequired = step.required && self.currentStep != elemScope.$index;
-
-
-      if(step.required && self.currentStep != elemScope.$index) return true;
-
-      /* if(self.currentStep > elemScope.$index) return false; */
     }
-    //console.log(count);
-    console.log(count);
-    return isRequired;
+    return isOptional;
   };
 
 
@@ -154,6 +139,11 @@ function KdsStepperController ($scope, $element, $attrs, $compile, $timeout, $md
   };
 
 
+  /**
+   * @event checkPage
+   * @description
+   * Check if the page should be visible
+   */
   $scope.$watch(function () {
     return self.currentStep;
   }, function (newVal, oldVal) {
@@ -161,7 +151,7 @@ function KdsStepperController ($scope, $element, $attrs, $compile, $timeout, $md
     $timeout(function () {
       var steps = $element.find('kds-step');
 
-      if(newVal > oldVal) {
+      if (newVal > oldVal) {
         steps.addClass('kds-left').removeClass('kds-right');
       } else {
         steps.addClass('kds-right').removeClass('kds-left');
