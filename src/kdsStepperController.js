@@ -92,7 +92,9 @@ function KdsStepperController($scope, $element, $attrs, $compile, $timeout, $mdU
       target = $mdUtil.getClosest(target, 'kds-step-item');
     }
 
+
     if (!target.disabled) self.currentStep = elemScope.$index;
+
   };
 
   /**
@@ -160,7 +162,6 @@ function KdsStepperController($scope, $element, $attrs, $compile, $timeout, $mdU
       }
     })
   });
-
 }
 
 KdsStepperController.$inject = ['$scope', '$element', '$attrs', '$compile', '$timeout', '$mdUtil'];

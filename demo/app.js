@@ -37,8 +37,26 @@ angular.module('myApp').controller('myController', function($scope, $timeout){
   };
 
 
-  $scope.user = {};
+  $scope.user = {
+    nome: 'dawdaw'
+  };
 
+  $scope.messages = {
+    begin: 'Carregando com interpolation ...',
+    form: 'Carregando com interpolation ...',
+    checkitout: 'Carregando com interpolation ...'
+  }
+
+  $scope.isLoading = false;
+
+  $scope.beginStep = function() {
+    $scope.isLoading = true;
+    $timeout(function() {
+      $scope.steps.begin = true;
+      $scope.isLoading = false;
+      $scope.steps.begin = true;
+    }, 2000);
+  }
 
   /**
    * @description

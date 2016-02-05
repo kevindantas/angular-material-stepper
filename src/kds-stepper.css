@@ -1,10 +1,354 @@
+/*!
+Animate.css - http://daneden.me/animate
+Licensed under the MIT license - http://opensource.org/licenses/MIT
+Copyright (c) 2015 Daniel Eden
+*/
+body {
+  -webkit-backface-visibility: hidden; }
+
+.animated {
+  -webkit-animation-duration: 1s;
+  -moz-animation-duration: 1s;
+  -o-animation-duration: 1s;
+  animation-duration: 1s;
+  -webkit-animation-fill-mode: both;
+  -moz-animation-fill-mode: both;
+  -o-animation-fill-mode: both;
+  animation-fill-mode: both; }
+  .animated.infinite {
+    animation-iteration-count: infinite; }
+  .animated.hinge {
+    -webkit-animation-duration: 2s;
+    -moz-animation-duration: 2s;
+    -o-animation-duration: 2s;
+    animation-duration: 2s; }
+  .animated.bounceIn, .animated.bounceOut {
+    -webkit-animation-duration: 0.75s;
+    -moz-animation-duration: 0.75s;
+    -o-animation-duration: 0.75s;
+    animation-duration: 0.75s; }
+  .animated.flipOutX, .animated.flipOutY {
+    -webkit-animation-duration: 0.75s;
+    -moz-animation-duration: 0.75s;
+    -o-animation-duration: 0.75s;
+    animation-duration: 0.75s; }
+
+@-webkit-keyframes fadeIn {
+  0% {
+    opacity: 0; }
+  100% {
+    opacity: 1; } }
+
+@-moz-keyframes fadeIn {
+  0% {
+    opacity: 0; }
+  100% {
+    opacity: 1; } }
+
+@-o-keyframes fadeIn {
+  0% {
+    opacity: 0; }
+  100% {
+    opacity: 1; } }
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0; }
+  100% {
+    opacity: 1; } }
+
+.fadeIn {
+  -webkit-animation-name: fadeIn;
+  -moz-animation-name: fadeIn;
+  -o-animation-name: fadeIn;
+  animation-name: fadeIn; }
+
+@-webkit-keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    -webkit-transform: translateY(20px); }
+  100% {
+    opacity: 1;
+    -webkit-transform: translateY(0); } }
+
+@-moz-keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    -moz-transform: translateY(20px); }
+  100% {
+    opacity: 1;
+    -moz-transform: translateY(0); } }
+
+@-o-keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    -o-transform: translateY(20px); }
+  100% {
+    opacity: 1;
+    -o-transform: translateY(0); } }
+
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px); }
+  100% {
+    opacity: 1;
+    transform: translateY(0); } }
+
+.fadeInUp {
+  -webkit-animation-name: fadeInUp;
+  -moz-animation-name: fadeInUp;
+  -o-animation-name: fadeInUp;
+  animation-name: fadeInUp; }
+
+@-webkit-keyframes fadeOut {
+  0% {
+    opacity: 1; }
+  100% {
+    opacity: 0; } }
+
+@-moz-keyframes fadeOut {
+  0% {
+    opacity: 1; }
+  100% {
+    opacity: 0; } }
+
+@-o-keyframes fadeOut {
+  0% {
+    opacity: 1; }
+  100% {
+    opacity: 0; } }
+
+@keyframes fadeOut {
+  0% {
+    opacity: 1; }
+  100% {
+    opacity: 0; } }
+
+.fadeOut {
+  -webkit-animation-name: fadeOut;
+  -moz-animation-name: fadeOut;
+  -o-animation-name: fadeOut;
+  animation-name: fadeOut; }
+
+@-webkit-keyframes fadeOutDown {
+  0% {
+    opacity: 1;
+    -webkit-transform: translateY(0); }
+  100% {
+    opacity: 0;
+    -webkit-transform: translateY(20px); } }
+
+@-moz-keyframes fadeOutDown {
+  0% {
+    opacity: 1;
+    -moz-transform: translateY(0); }
+  100% {
+    opacity: 0;
+    -moz-transform: translateY(20px); } }
+
+@-o-keyframes fadeOutDown {
+  0% {
+    opacity: 1;
+    -o-transform: translateY(0); }
+  100% {
+    opacity: 0;
+    -o-transform: translateY(20px); } }
+
+@keyframes fadeOutDown {
+  0% {
+    opacity: 1;
+    transform: translateY(0); }
+  100% {
+    opacity: 0;
+    transform: translateY(20px); } }
+
+.fadeOutDown {
+  -webkit-animation-name: fadeOutDown;
+  -moz-animation-name: fadeOutDown;
+  -o-animation-name: fadeOutDown;
+  animation-name: fadeOutDown; }
+
+/*!
+Animate.css - http://daneden.me/animate
+Licensed under the MIT license - http://opensource.org/licenses/MIT
+Copyright (c) 2015 Daniel Eden
+*/
+body {
+  -webkit-backface-visibility: hidden; }
+
+.animated, kds-stepper kds-steps-message.ng-enter, kds-stepper kds-steps-message.ng-leave, kds-stepper kds-step-loading.ng-enter, kds-stepper kds-step-loading.ng-leave {
+  -webkit-animation-duration: 1s;
+  -moz-animation-duration: 1s;
+  -o-animation-duration: 1s;
+  animation-duration: 1s;
+  -webkit-animation-fill-mode: both;
+  -moz-animation-fill-mode: both;
+  -o-animation-fill-mode: both;
+  animation-fill-mode: both; }
+  .animated.infinite, kds-stepper kds-steps-message.infinite.ng-enter, kds-stepper kds-steps-message.infinite.ng-leave, kds-stepper kds-step-loading.infinite.ng-enter, kds-stepper kds-step-loading.infinite.ng-leave {
+    animation-iteration-count: infinite; }
+  .animated.hinge, kds-stepper kds-steps-message.hinge.ng-enter, kds-stepper kds-steps-message.hinge.ng-leave, kds-stepper kds-step-loading.hinge.ng-enter, kds-stepper kds-step-loading.hinge.ng-leave {
+    -webkit-animation-duration: 2s;
+    -moz-animation-duration: 2s;
+    -o-animation-duration: 2s;
+    animation-duration: 2s; }
+  .animated.bounceIn, kds-stepper kds-steps-message.bounceIn.ng-enter, kds-stepper kds-steps-message.bounceIn.ng-leave, kds-stepper kds-step-loading.bounceIn.ng-enter, kds-stepper kds-step-loading.bounceIn.ng-leave, .animated.bounceOut, kds-stepper kds-steps-message.bounceOut.ng-enter, kds-stepper kds-steps-message.bounceOut.ng-leave, kds-stepper kds-step-loading.bounceOut.ng-enter, kds-stepper kds-step-loading.bounceOut.ng-leave {
+    -webkit-animation-duration: 0.75s;
+    -moz-animation-duration: 0.75s;
+    -o-animation-duration: 0.75s;
+    animation-duration: 0.75s; }
+  .animated.flipOutX, kds-stepper kds-steps-message.flipOutX.ng-enter, kds-stepper kds-steps-message.flipOutX.ng-leave, kds-stepper kds-step-loading.flipOutX.ng-enter, kds-stepper kds-step-loading.flipOutX.ng-leave, .animated.flipOutY, kds-stepper kds-steps-message.flipOutY.ng-enter, kds-stepper kds-steps-message.flipOutY.ng-leave, kds-stepper kds-step-loading.flipOutY.ng-enter, kds-stepper kds-step-loading.flipOutY.ng-leave {
+    -webkit-animation-duration: 0.75s;
+    -moz-animation-duration: 0.75s;
+    -o-animation-duration: 0.75s;
+    animation-duration: 0.75s; }
+
+@-webkit-keyframes fadeIn {
+  0% {
+    opacity: 0; }
+  100% {
+    opacity: 1; } }
+
+@-moz-keyframes fadeIn {
+  0% {
+    opacity: 0; }
+  100% {
+    opacity: 1; } }
+
+@-o-keyframes fadeIn {
+  0% {
+    opacity: 0; }
+  100% {
+    opacity: 1; } }
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0; }
+  100% {
+    opacity: 1; } }
+
+.fadeIn {
+  -webkit-animation-name: fadeIn;
+  -moz-animation-name: fadeIn;
+  -o-animation-name: fadeIn;
+  animation-name: fadeIn; }
+
+@-webkit-keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    -webkit-transform: translateY(20px); }
+  100% {
+    opacity: 1;
+    -webkit-transform: translateY(0); } }
+
+@-moz-keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    -moz-transform: translateY(20px); }
+  100% {
+    opacity: 1;
+    -moz-transform: translateY(0); } }
+
+@-o-keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    -o-transform: translateY(20px); }
+  100% {
+    opacity: 1;
+    -o-transform: translateY(0); } }
+
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px); }
+  100% {
+    opacity: 1;
+    transform: translateY(0); } }
+
+.fadeInUp, kds-stepper kds-steps-message.ng-enter, kds-stepper kds-step-loading.ng-enter {
+  -webkit-animation-name: fadeInUp;
+  -moz-animation-name: fadeInUp;
+  -o-animation-name: fadeInUp;
+  animation-name: fadeInUp; }
+
+@-webkit-keyframes fadeOut {
+  0% {
+    opacity: 1; }
+  100% {
+    opacity: 0; } }
+
+@-moz-keyframes fadeOut {
+  0% {
+    opacity: 1; }
+  100% {
+    opacity: 0; } }
+
+@-o-keyframes fadeOut {
+  0% {
+    opacity: 1; }
+  100% {
+    opacity: 0; } }
+
+@keyframes fadeOut {
+  0% {
+    opacity: 1; }
+  100% {
+    opacity: 0; } }
+
+.fadeOut {
+  -webkit-animation-name: fadeOut;
+  -moz-animation-name: fadeOut;
+  -o-animation-name: fadeOut;
+  animation-name: fadeOut; }
+
+@-webkit-keyframes fadeOutDown {
+  0% {
+    opacity: 1;
+    -webkit-transform: translateY(0); }
+  100% {
+    opacity: 0;
+    -webkit-transform: translateY(20px); } }
+
+@-moz-keyframes fadeOutDown {
+  0% {
+    opacity: 1;
+    -moz-transform: translateY(0); }
+  100% {
+    opacity: 0;
+    -moz-transform: translateY(20px); } }
+
+@-o-keyframes fadeOutDown {
+  0% {
+    opacity: 1;
+    -o-transform: translateY(0); }
+  100% {
+    opacity: 0;
+    -o-transform: translateY(20px); } }
+
+@keyframes fadeOutDown {
+  0% {
+    opacity: 1;
+    transform: translateY(0); }
+  100% {
+    opacity: 0;
+    transform: translateY(20px); } }
+
+.fadeOutDown, kds-stepper kds-steps-message.ng-leave, kds-stepper kds-step-loading.ng-leave {
+  -webkit-animation-name: fadeOutDown;
+  -moz-animation-name: fadeOutDown;
+  -o-animation-name: fadeOutDown;
+  animation-name: fadeOutDown; }
+
 kds-stepper {
   background: #fff;
   -webkit-box-shadow: 0px 3px 7px rgba(0, 0, 0, 0.2);
   -moz-box-shadow: 0px 3px 7px rgba(0, 0, 0, 0.2);
   box-shadow: 0px 3px 7px rgba(0, 0, 0, 0.2);
   display: block;
-  padding: 0 !important; }
+  padding: 0 !important;
+  position: relative;
+  overflow: hidden; }
   kds-stepper div.layout-column {
     padding-bottom: 30px; }
   kds-stepper.round kds-steps-wrapper {
@@ -104,3 +448,29 @@ kds-stepper {
           position: absolute;
           top: 0;
           animation: kds-left-leave .5s; }
+  kds-stepper kds-steps-message {
+    width: 100%;
+    height: 76px;
+    -webkit-box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.2);
+    box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.2);
+    position: relative;
+    z-index: 3; }
+    kds-stepper kds-steps-message span {
+      padding-left: 24px;
+      font-weight: 400; }
+    kds-stepper kds-steps-message.ng-enter {
+      animation-duration: .5s;
+      -webkit-animation-duration: .5s;
+      -moz-animation-duration: .5s; }
+    kds-stepper kds-steps-message.ng-leave {
+      position: absolute;
+      animation-duration: .2s;
+      -webkit-animation-duration: .2s;
+      -moz-animation-duration: .2s; }
+  kds-stepper kds-step-loading {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: 2;
+    background: rgba(255, 255, 255, 0.9); }

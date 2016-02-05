@@ -6,6 +6,8 @@
 
   <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.0.0/angular-material.min.css">
 
+
+
   <!-- Angular Material requires Angular.js Libraries -->
   <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js"></script>
   <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
@@ -18,10 +20,11 @@
   <div flex layout="row" layout-align="center center">
     <div flex="90" layout-padding>
       <h1>Horizontal</h1>
-      <kds-stepper>
-        <kds-step label="Let's Begin!" step-done="steps.begin.done">
-          <form action="#" layout="column">
 
+      <kds-stepper md-theme="mytheme" is-loading="isLoading" loading-message="messages.loading" current-step="myContrller.step">
+
+        <kds-step label="Let's Begin!" step-done="steps.begin" message="Step 1 looks great! Step 2 is coming up.">
+          <form action="#" layout="column">         
             <h2>First Time!</h2>
             <h3>Here </h3>
             <div text-angular="text-angular" name="htmlcontent" ng-model="htmlcontent"></div>
@@ -30,8 +33,9 @@
             <md-checkbox required ng-model="user.accept">
               Accept the term and conditions
             </md-checkbox>
-            <div layout="row" layout-align="">
-              <md-button class="md-primary md-raised"  ng-disabled="!user.accept" ng-click="steps.begin.done = true">Let's Go!!!</md-button>
+
+            <div layout="row">
+              <md-button class="md-primary md-raised" ng-disabled="!user.accept" ng-click="beginStep()">Let's Go!!!</md-button>
             </div>
           </form>
         </kds-step>
@@ -52,6 +56,7 @@
             </div>
 
             <md-button class="md-raised md-primary" type="submit">
+
               Confirm
             </md-button>
           </form>
@@ -329,7 +334,7 @@
           suscipit.</p>
 
       </md-tab>
-      <md-tab label="Tab 2">
+      <md-tab>
         <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. A aliquam architecto eligendi laudantium natus
           necessitatibus omnis perspiciatis qui repudiandae vel. Ab ad culpa doloribus ipsum labore omnis quam sit
           suscipit.</p>

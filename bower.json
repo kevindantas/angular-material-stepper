@@ -22,6 +22,7 @@
     "tests"
   ],
   "dependencies": {
-    "angular-material": "~1.0.1"
+    "angular-material": "~1.0.1",
+    "animate-sass": "^0.6.4"
   }
 }
