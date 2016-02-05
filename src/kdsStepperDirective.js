@@ -24,7 +24,7 @@ angular
 function KdsStepper($mdTheming, $compile) {
   return {
     scope:            {
-      currentStep: '='
+      currentStep: '=?'
     },
     restrict:         'EA',
     controller:       'KdsStepperController',
@@ -83,7 +83,7 @@ KdsStepper.$inject = ['$mdTheming', '$compile'];
 angular.module('kds.stepper')
   .directive('kdsStepsWrapper', KdsStepperWrapper);
 
-function KdsStepperWrapper($compile) {
+function KdsStepperWrapper() {
   return {
     restrict: 'E',
     require:  '^kdsStepper',
@@ -117,13 +117,12 @@ function KdsStepperWrapper($compile) {
 angular.module('kds.stepper')
   .directive('kdsStepsContent', kdsStepsContent);
 
-function kdsStepsContent($compile) {
+function kdsStepsContent() {
   return {
     restrict: 'E',
     require:  '^kdsStepper'
   };
 }
-kdsStepsContent.$inject = ['$compile'];
 
 
 /**
@@ -166,15 +165,14 @@ function KdsStep($compile) {
       scope.$watch(function () {
         return parentScope.$eval(attrs.stepDone);
       }, function (newVal, oldVal) {
-        if(controller.steps[controller.currentStep]){
-          
+        if (controller.steps[controller.currentStep]) {
+
         }
         if (newVal && !oldVal) {
           controller.steps[controller.currentStep].done = true;
           controller.currentStep++;
         }
       });
-      
 
 
       // Indicate warning icon
