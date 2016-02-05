@@ -3,16 +3,16 @@
  */
 //'use strict';
 angular.module('kds.stepper', ['ngMaterial'])
-  .config(function ($mdIconProvider) {
+  .config(['$mdIconProvider', function ($mdIconProvider) {
     $mdIconProvider.icon(iconDone.id, iconDone.url, 24);
     $mdIconProvider.icon(iconWarning.id, iconWarning.url, 24);
     $mdIconProvider.icon(iconError.id, iconError.url, 24);
-  })
-  .run(function ($http, $templateCache) {
+  }])
+  .run(['$http', '$templateCache', function ($http, $templateCache) {
     $templateCache.put(iconDone.url, iconDone.svg);
     $templateCache.put(iconWarning.url, iconWarning.svg);
     $templateCache.put(iconError.url, iconError.svg);
-  });
+  }]);
 
 var iconDone = {
   id:  'md-done',

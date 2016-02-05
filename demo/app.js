@@ -2,7 +2,7 @@
  * Created by NDS on 04/01/2016.
  */
 
-angular.module('myApp', ['kds.stepper']);
+angular.module('myApp', ['kds.stepper', 'textAngular']);
 angular.module('myApp').config(function($mdThemingProvider) {
   $mdThemingProvider.definePalette('myNewPaletteName', {
     '50': 'ffebee',

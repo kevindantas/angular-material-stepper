@@ -6,7 +6,7 @@ angular
   .module('kds.stepper')
   .controller('KdsStepperController', KdsStepperController);
 
-function KdsStepperController($scope, $element, $attrs, $compile, $timeout, $mdUtil, $mdTheming) {
+function KdsStepperController($scope, $element, $attrs, $compile, $timeout, $mdUtil) {
 
   var self        = this;
   var parentScope = $scope.$parent;
@@ -19,6 +19,8 @@ function KdsStepperController($scope, $element, $attrs, $compile, $timeout, $mdU
 
   /** @type {Array.<Object>} */
   self.attrs = $attrs;
+
+  //self.currentStep = 0;
 
   /**
    * Default label as the name of the step. e.g.: Step {{stepIndex}}
@@ -93,7 +95,6 @@ function KdsStepperController($scope, $element, $attrs, $compile, $timeout, $mdU
     if (!target.disabled) self.currentStep = elemScope.$index;
   };
 
-
   /**
    * @name isDisabled
    * @description
@@ -104,17 +105,18 @@ function KdsStepperController($scope, $element, $attrs, $compile, $timeout, $mdU
   self.isDisabled = function (elemScope){
     var step, previousStep, nextStep, isOptional = false;
 
-    var currentIndex = elemScope.$index, // Current index of the element to be checked
-        currentStep  = elemScope.step;    // Current step to be checked
 
-    if (currentStep.done) return false;
-    if (currentIndex > 0){
+    var elemIndex = elemScope.$index, // Current index of the element to be checked
+        currentStep  = elemScope.step;    // Current step to be checked
+    if (currentStep.done || elemIndex < self.currentStep) return false;
+
+    if (elemIndex > 0){
       previousStep       = self.steps[elemScope.$index - 1];
       previousStep.index = elemScope.$index - 1;
       if (previousStep.done) return false;
     }
 
-    if (currentIndex < self.steps.length - 1)
+    if (elemIndex < self.steps.length - 1)
       nextStep = self.steps[elemScope.$index + 1];
 
     for (var i = 0; i < self.steps.length; i++){
@@ -161,4 +163,4 @@ function KdsStepperController($scope, $element, $attrs, $compile, $timeout, $mdU
 
 }
 
-KdsStepperController.$inject = ['$scope', '$element', '$attrs', '$compile', '$timeout', '$mdUtil', '$mdTheming'];
+KdsStepperController.$inject = ['$scope', '$element', '$attrs', '$compile', '$timeout', '$mdUtil'];

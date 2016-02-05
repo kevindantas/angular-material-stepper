@@ -7,8 +7,9 @@
   <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.0.0/angular-material.min.css">
 
   <!-- Angular Material requires Angular.js Libraries -->
-  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
-
+  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js"></script>
+  <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="../src/kds-stepper.css">
 
 </head>
@@ -17,13 +18,13 @@
   <div flex layout="row" layout-align="center center">
     <div flex="90" layout-padding>
       <h1>Horizontal</h1>
-      <kds-stepper md-theme="mytheme">
+      <kds-stepper>
         <kds-step label="Let's Begin!" step-done="steps.begin.done">
           <form action="#" layout="column">
 
             <h2>First Time!</h2>
             <h3>Here </h3>
-
+            <div text-angular="text-angular" name="htmlcontent" ng-model="htmlcontent"></div>
             <p>You can click on the button bellow to go to the next step after you agree the term and conditions</p>
 
             <md-checkbox required ng-model="user.accept">
@@ -35,7 +36,7 @@
           </form>
         </kds-step>
 
-        <kds-step label="Fill the form" step-warning="steps.fillForm.warning"  step-done="steps.fillForm.done" step-optional>
+        <kds-step label="Fill the form" step-done="steps.fillForm.done">
           <h2>Step Two</h2>
           <form name="randomForm" flex ng-submit="signUp()">
             <div layout="row" flex>
@@ -68,23 +69,252 @@
   </div>
 
   <div flex layout="row" layout-align="center" layout-padding>
-    <!--<kds-stepper md-theme="mytheme" flex="90">
-      <kds-step label="Let's Begin!">
-        <h2>Step One</h2>
+    <kds-stepper>
+      <kds-step label="Informações Básicas" step-optional step-done="steps.infos">
+        <form name="experienciaCreate" class="jornada" enctype="multipart/form-data"
+              novalidate layout="column" layout-padding>
 
-        <p>Click on the button bellow to continue</p>
+          <md-input-container class="md-no-anim">
+            <input type="text" name="nome" ng-model="experiencia.nome" placeholder="Nome" required>
+            <div ng-messages="experienciaCreate.nome.$error" ng-if="main.validInput(experienciaCreate, 'nome')">
+              <div ng-message="required">A descrição é obrigatória</div>
+              <span ng-message="server">{{experienciaCreate.descricao.$error.server.message}}</span>
+            </div>
+          </md-input-container>
 
-        <md-button>Let's Go!!!</md-button>
+          <md-input-container class="preview-image">
+            <input-photo-preview name="foto" file-model="experiencia.foto"></input-photo-preview>
+          </md-input-container>
+
+          <md-input-container class="md-no-anim">
+            <label>Descricao</label>
+            <div text-angular ng-model="experiencia.descricao" name="descricao" class="md-input"
+                 placeholder="Digite a descrição da experiencia..." rows="5" required></div>
+            <div ng-messages="experienciaCreate.descricao.$error" ng-if="main.validInput(experienciaCreate, 'descricao')">
+              <div ng-message="required">A descrição é obrigatória</div>
+            </div>
+          </md-input-container>
+
+          <div ng-if="is.saving" md-theme="success">
+            <md-progress-linear md-mode="indeterminate"></md-progress-linear>
+          </div>
+
+          <div layout-align="end" layout="row">
+            <div class="" md-theme="success">
+              <md-button class="md-warn" type="reset" ng-disabled="is.saving">Limpar</md-button>
+
+              <md-button class="md-raised md-primary" ng-disabled="is.saving" ng-if="experiencia.id == undefined" ng-click="experienciaCreate.$valid && create($event)">Salvar</md-button>
+              <md-button class="md-raised md-primary" ng-disabled="is.saving" ng-if="experiencia.id !== undefined" ng-click="experienciaCreate.$valid && edit($event)">Editar</md-button>
+            </div>
+          </div>
+        </form>
+
       </kds-step>
 
-      <kds-step label="Last Step">
-        <h2>Step Last</h2>
+      <kds-step label="Selecionar Capacidade Técnica" step-optional>
+        <md-content class="curriculo" md-theme="success" layout="row" flex layout-align="center">
 
-        <h3>Name: {{user.name}}</h3>
-        <h5>Email: {{user.email}}</h5>
+          <div class="curriculo-content" layout="row">
 
+            <!--======== Areas ========-->
+            <div flex>
+              <div id="areas" class="grid-content">
+                <form action="#">
+                  <h4>Áreas</h4>
+                  <input type="text" class="input-search" placeholder="Pesquisar Área" ng-model="search.area.descricao">
+                </form>
+
+                <md-progress-circular md-mode="indeterminate" class="md-hue-3 md-accent" ng-if="is.loading"></md-progress-circular>
+
+                <ul>
+                  <li ng-if="!all.length && is.loading == undefined">Sem áreas cadastradas</li>
+                  <li class="card"
+                      ng-class="{active: current.area.id == area.id, disabled: current.area.id != area.id && current.area != undefined}"
+                      id="{{area.id}}"
+                      ng-repeat="area in jornada.areas | filter: search.area.descricao" ng-click="currentItem({area: area})" animate-end-repeat>
+
+                    <md-content><h3>{{ area.descricao }} </h3></md-content>
+
+                    <div class="md-actions">
+                      <span><small>{{ criteriosCount(area.id, 'area') }} critérios selecionados nessa área</small></span>
+                    </div>
+
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <!--======== Competencias ========-->
+            <div flex>
+              <form action="#">
+                <h4>Competências</h4>
+                <input type="text" class="input-search" placeholder="Pesquisar Competência" ng-model="search.competencia.descricao">
+              </form>
+
+              <md-progress-circular md-mode="indeterminate" class="md-hue-3 md-accent" ng-if="is.loading"></md-progress-circular>
+
+              <ul>
+                <li ng-repeat="competencia in jornada.competencias | filter: search.competencia.descricao"
+                    ng-click="currentItem({competencia: competencia})" animate-end-repeat
+                    ng-if="competencia.parent == current.area.id" class="card" id="{{competencia.id}}"
+                    ng-class="{active: current.competencia.id == competencia.id, disabled: current.competencia.id != competencia.id && current.competencia != undefined}">
+
+                  <md-content><p>{{ ::competencia.descricao }} </p></md-content>
+
+                  <div class="md-actions">
+                    <span><small>{{ criteriosCount(area.id, 'area') }} critérios selecionados nessa área</small></span>
+                  </div>
+
+                </li>
+                <li ng-if="!jornada.competencia.length && is.loading == undefined">Sem áreas cadastradas</li>
+              </ul>
+            </div>
+
+            <!--======== Capacidades ========-->
+            <div flex>
+              <form action="#">
+                <h4>Capacidades</h4>
+                <input type="text" class="input-search" placeholder="Pesquisar Capacidades" ng-model="search.capacidade.descricao">
+              </form>
+
+              <md-progress-circular md-mode="indeterminate" class="md-hue-3 md-accent" ng-if="is.loading"></md-progress-circular>
+
+              <ul>
+                <li ng-repeat="capacidade in jornada.capacidades | filter: search.capacidade.descricao"
+                    ng-click="currentItem({capacidade: capacidade})" animate-end-repeat
+                    ng-if="capacidade.parent == current.competencia.id" class="card" id="{{capacidade.id}}"
+                    ng-class="{active: current.capacidade.id == capacidade.id, disabled: current.capacidade.id != capacidade.id && current.capacidade != undefined}">
+
+                  <md-content><p>{{ ::capacidade.descricao }} </p></md-content>
+
+                  <div class="md-actions">
+                    <span><small>{{ criteriosCount(area.id, 'area') }} critérios selecionados nessa área</small></span>
+                  </div>
+
+                </li>
+                <li ng-if="!jornada.capacidade.length && is.loading == undefined">Sem capacidades cadastradas</li>
+              </ul>
+            </div>
+
+            <!--======== Conhecimentos ========-->
+            <div flex>
+              <form action="#">
+                <h4>Conhecimento</h4>
+                <input type="text" class="input-search" placeholder="Pesquisar Conhecimento" ng-model="search.conhecimento.descricao">
+              </form>
+
+              <md-progress-circular md-mode="indeterminate" class="md-hue-3 md-accent" ng-if="is.loading"></md-progress-circular>
+
+              <ul>
+                <li ng-repeat="conhecimento in jornada.conhecimentos | filter: search.conhecimento.descricao"
+                    ng-click="currentItem({conhecimento: conhecimento})" animate-end-repeat
+                    ng-if="conhecimento.parent == current.capacidade.id" class="card" id="{{conhecimento.id}}"
+                    ng-class="{active: current.conhecimento.id == conhecimento.id, disabled: current.conhecimento.id != conhecimento.id && current.conhecimento != undefined}">
+
+                  <md-content><p>{{ ::conhecimento.descricao }} </p></md-content>
+
+                  <div class="md-actions">
+                    <span><small>{{ criteriosCount(area.id, 'area') }} critérios selecionados nessa área</small></span>
+                  </div>
+
+                </li>
+                <li ng-if="!jornada.conhecimento.length && is.loading == undefined">Sem conhecimentos cadastradas</li>
+              </ul>
+            </div>
+
+            <!--======== Critérios ========-->
+            <div flex>
+              <form action="#">
+                <h4>Critérios</h4>
+                <input type="text" class="input-search" placeholder="Pesquisar Critérios" ng-model="search.criterio.descricao">
+              </form>
+
+              <md-progress-circular md-mode="indeterminate" class="md-hue-3 md-accent" ng-if="is.loading"></md-progress-circular>
+
+              <ul>
+                <li ng-repeat="criterio in jornada.criteriosAvaliacao | filter: search.criterio.descricao"
+                    ng-click="currentItem({criterio: criterio})" animate-end-repeat
+                    ng-if="criterio.parent == current.conhecimento.id" class="card" id="{{criterio.id}}"
+                    ng-class="{active: current.criterio.id == criterio.id || isSelected(criterio.id), disabled: current.criterio.id != criterio.id && current.criterio != undefined}">
+
+                  <md-content><p>{{ ::criterio.descricao }} </p></md-content>
+
+                  <div class="md-actions" md-theme="success">
+                    <md-button ng-if="!isSelected(criterio.id)" class="md-primary md-raised" ng-click="selectCriterio(criterio)">Selecionar
+                    </md-button>
+                    <md-button ng-if="isSelected(criterio.id)" class="md-primary md-raised" ng-click="removeCriterio(criterio)">Remover</md-button>
+                  </div>
+
+                </li>
+                <li ng-if="!jornada.criterio.length && is.loading == undefined">Sem criterios cadastradas</li>
+              </ul>
+            </div>
+
+          </div>
+
+        </md-content>
       </kds-step>
-    </kds-stepper>-->
+
+      <kds-step label="Selecionar Capacidade Atitudinal">
+        <md-content class="curriculo" md-theme="success" layout="row" flex layout-align="center">
+          <div class="curriculo-content" layout="row">
+            <div flex>
+              <form action="#">
+                <h4>Capacidades</h4>
+                <input type="text" class="input-search" placeholder="Pesquisar Capacidades" ng-model="search.capacidade.descricao">
+              </form>
+
+              <md-progress-circular md-mode="indeterminate" class="md-hue-3 md-accent" ng-if="is.loading"></md-progress-circular>
+
+              <ul>
+                <li ng-repeat="capacidadeAtitudinal in jornada.capacidadesAtitudinais | filter: search.capacidadeAtitudinal.descricao"
+                    ng-click="currentItem({capacidadeAtitudinal: capacidadeAtitudinal})" animate-end-repeat
+                    class="card" id="{{capacidadeAtitudinal.id}}"
+                    ng-class="{active: current.capacidadeAtitudinal.id == capacidadeAtitudinal.id, disabled: current.capacidadeAtitudinal.id != capacidadeAtitudinal.id && current.capacidade != undefined}">
+
+                  <md-content><p>{{ ::capacidadeAtitudinal.descricao }} </p></md-content>
+
+                  <div class="md-actions">
+                    <span><small>{{ criteriosCount(area.id, 'area') }} critérios selecionados nessa área</small></span>
+                  </div>
+
+                </li>
+                <li ng-if="!jornada.capacidadesAtitudinais.length && is.loading == undefined">Sem capacidades atitudinais cadastradas</li>
+              </ul>
+            </div>
+
+
+            <div flex>
+              <form action="#">
+                <h4>Critérios Atitudinais</h4>
+                <input type="text" class="input-search" placeholder="Pesquisar Critérios" ng-model="search.criterioatitudinal.descricao">
+              </form>
+
+              <md-progress-circular md-mode="indeterminate" class="md-hue-3 md-accent" ng-if="is.loading"></md-progress-circular>
+
+              <ul>
+                <li ng-repeat="criterioAtitudinal in jornada.criteriosAvaliacaoAtitudinal | filter: search.criterioAtitudinal.descricao"
+                    ng-click="currentItem({criterioAtitudinal: criterioAtitudinal})" animate-end-repeat
+                    ng-if="criterioAtitudinal.parent == current.capacidadeAtitudinal.id" class="card" id="{{criterioAtitudinal.id}}"
+                    ng-class="{active: current.criterioAtitudinal.id == criterioAtitudinal.id || isSelectedAtitudinal(criterioAtitudinal.id), disabled: current.criterioAtitudinal.id != criterioAtitudinal.id && current.criterioAtitudinal != undefined}">
+
+                  <md-content><p>{{ ::criterioAtitudinal.descricao }} </p></md-content>
+
+                  <div class="md-actions" md-theme="success">
+                    <md-button ng-if="!isSelectedAtitudinal(criterioAtitudinal.id)" class="md-primary md-raised" ng-click="selectCriterioAtitudinal(criterioAtitudinal)">Selecionar
+                    </md-button>
+                    <md-button ng-if="isSelectedAtitudinal(criterioAtitudinal.id)" class="md-primary md-raised" ng-click="removeCriterioAtitudinal(criterioAtitudinal)">Remover</md-button>
+                  </div>
+
+                </li>
+                <li ng-if="!jornada.criterioAtitudinal.length && is.loading == undefined">Sem criterios cadastradas</li>
+              </ul>
+            </div>
+          </div>
+        </md-content>
+      </kds-step>
+
+    </kds-stepper>
   </div>
 
   <div flex layout="row" layout-align="center center">
@@ -117,6 +347,11 @@
 <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-messages.min.js"></script>
 
 <script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.0.0/angular-material.min.js"></script>
+<script src='http://textangular.com/dist/textAngular-rangy.min.js'></script>
+
+<script src='http://textangular.com/dist/textAngular-sanitize.min.js'></script>
+
+<script src='http://textangular.com/dist/textAngular.min.js'></script>
 
 <script src="../bower_components/angular-material/modules/js/tabs/tabs.js"></script>
 <script src="../kds-stepper.js"></script>

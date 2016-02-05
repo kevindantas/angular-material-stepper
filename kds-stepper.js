@@ -3,16 +3,16 @@
  */
 //'use strict';
 angular.module('kds.stepper', ['ngMaterial'])
-  .config(function ($mdIconProvider) {
+  .config(['$mdIconProvider', function ($mdIconProvider) {
     $mdIconProvider.icon(iconDone.id, iconDone.url, 24);
     $mdIconProvider.icon(iconWarning.id, iconWarning.url, 24);
     $mdIconProvider.icon(iconError.id, iconError.url, 24);
-  })
-  .run(function ($http, $templateCache) {
+  }])
+  .run(['$http', '$templateCache', function ($http, $templateCache) {
     $templateCache.put(iconDone.url, iconDone.svg);
     $templateCache.put(iconWarning.url, iconWarning.svg);
     $templateCache.put(iconError.url, iconError.svg);
-  });
+  }]);
 
 var iconDone = {
   id:  'md-done',
@@ -39,7 +39,7 @@ angular
   .module('kds.stepper')
   .controller('KdsStepperController', KdsStepperController);
 
-function KdsStepperController($scope, $element, $attrs, $compile, $timeout, $mdUtil, $mdTheming) {
+function KdsStepperController($scope, $element, $attrs, $compile, $timeout, $mdUtil) {
 
   var self        = this;
   var parentScope = $scope.$parent;
@@ -52,6 +52,8 @@ function KdsStepperController($scope, $element, $attrs, $compile, $timeout, $mdU
 
   /** @type {Array.<Object>} */
   self.attrs = $attrs;
+
+  //self.currentStep = 0;
 
   /**
    * Default label as the name of the step. e.g.: Step {{stepIndex}}
@@ -126,7 +128,6 @@ function KdsStepperController($scope, $element, $attrs, $compile, $timeout, $mdU
     if (!target.disabled) self.currentStep = elemScope.$index;
   };
 
-
   /**
    * @name isDisabled
    * @description
@@ -137,17 +138,18 @@ function KdsStepperController($scope, $element, $attrs, $compile, $timeout, $mdU
   self.isDisabled = function (elemScope){
     var step, previousStep, nextStep, isOptional = false;
 
-    var currentIndex = elemScope.$index, // Current index of the element to be checked
-        currentStep  = elemScope.step;    // Current step to be checked
 
-    if (currentStep.done) return false;
-    if (currentIndex > 0){
+    var elemIndex = elemScope.$index, // Current index of the element to be checked
+        currentStep  = elemScope.step;    // Current step to be checked
+    if (currentStep.done || elemIndex < self.currentStep) return false;
+
+    if (elemIndex > 0){
       previousStep       = self.steps[elemScope.$index - 1];
       previousStep.index = elemScope.$index - 1;
       if (previousStep.done) return false;
     }
 
-    if (currentIndex < self.steps.length - 1)
+    if (elemIndex < self.steps.length - 1)
       nextStep = self.steps[elemScope.$index + 1];
 
     for (var i = 0; i < self.steps.length; i++){
@@ -194,7 +196,7 @@ function KdsStepperController($scope, $element, $attrs, $compile, $timeout, $mdU
 
 }
 
-KdsStepperController.$inject = ['$scope', '$element', '$attrs', '$compile', '$timeout', '$mdUtil', '$mdTheming'];
+KdsStepperController.$inject = ['$scope', '$element', '$attrs', '$compile', '$timeout', '$mdUtil'];
 /**
  * @ngdoc directive
  * @name kdsStepper
@@ -221,7 +223,7 @@ angular
 function KdsStepper($mdTheming, $compile) {
   return {
     scope:            {
-      currentStep: '='
+      currentStep: '=?'
     },
     restrict:         'EA',
     controller:       'KdsStepperController',
@@ -280,7 +282,7 @@ KdsStepper.$inject = ['$mdTheming', '$compile'];
 angular.module('kds.stepper')
   .directive('kdsStepsWrapper', KdsStepperWrapper);
 
-function KdsStepperWrapper($compile) {
+function KdsStepperWrapper() {
   return {
     restrict: 'E',
     require:  '^kdsStepper',
@@ -314,13 +316,12 @@ function KdsStepperWrapper($compile) {
 angular.module('kds.stepper')
   .directive('kdsStepsContent', kdsStepsContent);
 
-function kdsStepsContent($compile) {
+function kdsStepsContent() {
   return {
     restrict: 'E',
     require:  '^kdsStepper'
   };
 }
-kdsStepsContent.$inject = ['$compile'];
 
 
 /**
@@ -363,15 +364,14 @@ function KdsStep($compile) {
       scope.$watch(function () {
         return parentScope.$eval(attrs.stepDone);
       }, function (newVal, oldVal) {
-        if(controller.steps[controller.currentStep]){
-          
+        if (controller.steps[controller.currentStep]) {
+
         }
         if (newVal && !oldVal) {
           controller.steps[controller.currentStep].done = true;
           controller.currentStep++;
         }
       });
-      
 
 
       // Indicate warning icon
