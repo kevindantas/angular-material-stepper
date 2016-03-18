@@ -123,13 +123,11 @@ function KdsStepperController ($scope, $element, $attrs, $compile, $timeout, $md
   $scope.$watch(function () {
     return self.currentStep;
   }, function (newVal, oldVal) {
-
     $timeout(function () {
       var steps = $element.find('kds-step');
-
       if(newVal > oldVal) {
         steps.addClass('kds-left').removeClass('kds-right');
-      } else {
+      } else if(oldVal !== 0) {
         steps.addClass('kds-right').removeClass('kds-left');
       }
     })
