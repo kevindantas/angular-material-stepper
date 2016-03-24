@@ -1,3 +1,9 @@
+@import "animate.scss";
+
+div.layout-column {
+  padding-bottom:30px;
+}
+
 kds-stepper {
   background: #fff;
   -webkit-box-shadow: 0px 3px 7px rgba(0, 0, 0, .2);
@@ -5,6 +11,8 @@ kds-stepper {
   box-shadow: 0px 3px 7px rgba(0, 0, 0, .2);
   display: block;
   padding:0 !important;
+  position: relative;
+  overflow: hidden;
 
   div.layout-column {
     padding-bottom:30px;
@@ -43,7 +51,7 @@ kds-stepper {
           cursor: no-drop;
         }
       }
-
+      
       &.active {
         font-weight:700;
       }
@@ -158,6 +166,54 @@ kds-stepper {
       }
       */
 
+    }
+  }
+
+  kds-steps-message {
+    width: 100%;
+    height: 76px;
+    -webkit-box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.2);
+    box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.2);
+    position: relative;
+    z-index: 3;
+    
+    span {
+      padding-left: 24px;
+      font-weight: 400;
+    }
+    
+    &.ng-enter {
+      @extend .animated;
+      @extend .fadeInUp;
+      animation-duration: .5s;
+      -webkit-animation-duration: .5s;
+      -moz-animation-duration: .5s;
+    }
+    &.ng-leave {
+      @extend .animated;
+      @extend .fadeOutDown;
+      position: absolute;
+      animation-duration: .2s;
+      -webkit-animation-duration: .2s;
+      -moz-animation-duration: .2s;
+    }
+  }
+
+  kds-step-loading {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: 2;
+    background: rgba(255,255,255,0.9);
+
+    &.ng-enter {
+      @extend .animated;
+      @extend .fadeInUp;
+    }
+    &.ng-leave {
+      @extend .animated;
+      @extend .fadeOutDown;
     }
   }
 }

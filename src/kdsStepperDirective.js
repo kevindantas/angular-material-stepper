@@ -23,7 +23,9 @@ angular
 function KdsStepper($mdTheming, $compile) {
   return {
     scope:            {
-      currentStep: '='
+      currentStep: '=',
+      isLoading: '=',
+      loadingMessage: '='
     },
     restrict:         'EA',
     controller:       'KdsStepperController',
@@ -34,8 +36,14 @@ function KdsStepper($mdTheming, $compile) {
       var steps      = elem.children();
       attr.$kdsSteps = steps;
       return '' +
-        '<kds-steps-wrapper layout="{{$kdsStepperCtrl.orientation}}"> </kds-steps-wrapper>' +
-        '<kds-steps-content ng-transclude>' +
+        '<kds-steps-message class="feedback-animation" ng-if="$kdsStepperCtrl.isLoading" layout="{{$kdsStepperCtrl.orientation}}" layout-align="left center">'+
+        '<span>{{$kdsStepperCtrl.steps[$kdsStepperCtrl.currentStep].message}}</span>' +
+        '</kds-steps-message>' +
+        '<kds-steps-wrapper ng-if="!$kdsStepperCtrl.isLoading" layout="{{$kdsStepperCtrl.orientation}}"> </kds-steps-wrapper>' +
+        '<kds-steps-content>' +
+        '<kds-step-loading class="feedback-animation" ng-if="$kdsStepperCtrl.isLoading" layout="row" layout-align="center center">'+
+        '<md-progress-circular md-mode="indeterminate"></md-progress-circular>'+
+        '</kds-step-loading>'+
         '<kds-step ng-if="$kdsStepperCtrl.checkPage($index)" ng-repeat="step in $kdsStepperCtrl.steps"></kds-step>' +
         '</kds-steps-content>';
     },
@@ -48,10 +56,14 @@ function KdsStepper($mdTheming, $compile) {
       for (var i = 0; i < templates.length; i++) {
         label = templates[i].getAttribute('label');
         templates[i].removeAttribute('label');
+
+        //console.log(templates[i].getAttribute('message'));
+        var message = templates[i].getAttribute('message') || controller.defaultMessage;
         template = templates[i];
         steps.push({
           label: label,
           elem:  template,
+          message: message
         });
       }
       controller.steps = steps;
