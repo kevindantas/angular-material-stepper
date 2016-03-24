@@ -1,38 +1,22 @@
-<!doctype html>
-<html lang="en" ng-app="myApp">
-<head>
-  <meta charset="UTF-8">
-  <title>Kds Stepper</title>
-
-  <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.0.0/angular-material.min.css">
-
-
-
-  <!-- Angular Material requires Angular.js Libraries -->
-  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js"></script>
-  <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
-  <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
-  <link rel="stylesheet" href="../src/kds-stepper.css">
-
-</head>
-<body ng-cloak ng-controller="myController">
-<div layout="column">
+<div layout="column" ui-view>
   <div flex layout="row" layout-align="center center">
     <div flex="90" layout-padding>
       <h1>Horizontal</h1>
 
-      <kds-stepper md-theme="mytheme" is-loading="isLoading" loading-message="messages.loading" current-step="myContrller.step">
-
+      <kds-stepper md-theme="mytheme" is-loading="isLoading" current-step="step">
+        
         <kds-step label="Let's Begin!" step-done="steps.begin" message="Step 1 looks great! Step 2 is coming up.">
-          <form action="#" layout="column">         
+          <form action="#" layout="column">
             <h2>First Time!</h2>
             <h3>Here </h3>
-            <div text-angular="text-angular" name="htmlcontent" ng-model="htmlcontent"></div>
+            <!--<div text-angular="text-angular" name="htmlcontent" ng-model="htmlcontent"></div>-->
             <p>You can click on the button bellow to go to the next step after you agree the term and conditions</p>
 
             <md-checkbox required ng-model="user.accept">
               Accept the term and conditions
             </md-checkbox>
+
+            <div ui-view="fillForm"></div>
 
             <div layout="row">
               <md-button class="md-primary md-raised" ng-disabled="!user.accept" ng-click="beginStep()">Let's Go!!!</md-button>
@@ -41,25 +25,8 @@
         </kds-step>
 
         <kds-step label="Fill the form" step-done="steps.fillForm.done">
-          <h2>Step Two</h2>
-          <form name="randomForm" flex ng-submit="signUp()">
-            <div layout="row" flex>
-              <md-input-container flex="100">
-                <label>Name</label>
-                <input type="text" name="firstName" ng-model="user.name" required>
-              </md-input-container>
-
-              <md-input-container flex="50">
-                <label>Email</label>
-                <input type="email" name="email" ng-model="user.email" required>
-              </md-input-container>
-            </div>
-
-            <md-button class="md-raised md-primary" type="submit">
-
-              Confirm
-            </md-button>
-          </form>
+          <h1>dawdawdw</h1>
+          <!--<div ui-view="fillForm"></div>-->
         </kds-step>
 
         <kds-step label="Check it out">
@@ -74,7 +41,7 @@
   </div>
 
   <div flex layout="row" layout-align="center" layout-padding>
-    <kds-stepper>
+    <!--<kds-stepper>
       <kds-step label="Informações Básicas" step-optional step-done="steps.infos">
         <form name="experienciaCreate" class="jornada" enctype="multipart/form-data"
               novalidate layout="column" layout-padding>
@@ -121,7 +88,7 @@
 
           <div class="curriculo-content" layout="row">
 
-            <!--======== Areas ========-->
+            &lt;!&ndash;======== Areas ========&ndash;&gt;
             <div flex>
               <div id="areas" class="grid-content">
                 <form action="#">
@@ -149,7 +116,7 @@
               </div>
             </div>
 
-            <!--======== Competencias ========-->
+            &lt;!&ndash;======== Competencias ========&ndash;&gt;
             <div flex>
               <form action="#">
                 <h4>Competências</h4>
@@ -175,7 +142,7 @@
               </ul>
             </div>
 
-            <!--======== Capacidades ========-->
+            &lt;!&ndash;======== Capacidades ========&ndash;&gt;
             <div flex>
               <form action="#">
                 <h4>Capacidades</h4>
@@ -201,7 +168,7 @@
               </ul>
             </div>
 
-            <!--======== Conhecimentos ========-->
+            &lt;!&ndash;======== Conhecimentos ========&ndash;&gt;
             <div flex>
               <form action="#">
                 <h4>Conhecimento</h4>
@@ -227,7 +194,7 @@
               </ul>
             </div>
 
-            <!--======== Critérios ========-->
+            &lt;!&ndash;======== Critérios ========&ndash;&gt;
             <div flex>
               <form action="#">
                 <h4>Critérios</h4>
@@ -319,7 +286,7 @@
         </md-content>
       </kds-step>
 
-    </kds-stepper>
+    </kds-stepper>-->
   </div>
 
   <div flex layout="row" layout-align="center center">
@@ -344,22 +311,57 @@
       </md-tab>
     </md-tabs>
   </div>
+  <div flex layout="row" layout-align="center center">
+    <md-list>
+      <md-subheader class="md-no-sticky">3 line item</md-subheader>
+      <md-list-item class="md-3-line" ng-repeat="item in todos">
+        <img ng-src="{{item.face}}?{{$index}}" class="md-avatar" alt="{{item.who}}" />
+        <div class="md-list-item-text" layout="column">
+        </div>
+      </md-list-item>
+      <md-divider ></md-divider>
+      <md-subheader class="md-no-sticky">2 line item</md-subheader>
+      <md-list-item class="md-2-line">
+        <img ng-src="{{todos[0].face}}?20" class="md-avatar" alt="{{todos[0].who}}" />
+        <div class="md-list-item-text">
+          <h3>{{ todos[0].who }}</h3>
+          <p>Secondary text</p>
+        </div>
+      </md-list-item>
+      <md-divider ></md-divider>
+      <md-subheader class="md-no-sticky">3 line item, long paragraph (see on mobile)</md-subheader>
+      <md-list-item class="md-3-line md-long-text">
+        <img ng-src="{{todos[0].face}}?25" class="md-avatar" alt="{{todos[0].who}}" />
+        <div class="md-list-item-text">
+          <h3>{{ todos[0].who }}</h3>
+          <p>
+            Secondary line text Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam massa quam.
+            Nulla metus metus, ullamcorper vel, tincidunt sed, euismod in, nibh. Quisque volutpat condimentum
+            velit. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.
+          </p>
+        </div>
+      </md-list-item>
+      <md-list-item class="md-3-line md-long-text">
+        <img ng-src="{{todos[1].face}}?25" class="md-avatar" alt="{{todos[1].who}}" />
+        <div class="md-list-item-text">
+          <h3>{{ todos[1].who }}</h3>
+          <p>
+            Secondary line text Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam massa quam.
+            Nulla metus metus, ullamcorper vel, tincidunt sed, euismod in, nibh. Quisque volutpat condimentum
+            velit. Class aptent taciti sociosqu ad litra torquent per conubia nostra, per inceptos himenaeos.
+          </p>
+        </div>
+      </md-list-item>
+      <md-divider ></md-divider>
+      <md-subheader class="md-no-sticky">Classes</md-subheader>
+      <md-list-item class="md-2-line" ng-repeat="phone in phones">
+        <md-icon md-svg-icon="communication:phone" ng-if="$index !== 2" ng-class="{'md-avatar-icon': $index === 1}"></md-icon>
+        <div class="md-list-item-text" ng-class="{'md-offset': $index == 2 }">
+          <h3> {{ phone.number }} </h3>
+          <p> {{ phone.type }} </p>
+        </div>
+      </md-list-item>
+    </md-list>
+  </div>
+
 </div>
-
-
-<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-animate.min.js"></script>
-<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-aria.min.js"></script>
-<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-messages.min.js"></script>
-
-<script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.0.0/angular-material.min.js"></script>
-<script src='http://textangular.com/dist/textAngular-rangy.min.js'></script>
-
-<script src='http://textangular.com/dist/textAngular-sanitize.min.js'></script>
-
-<script src='http://textangular.com/dist/textAngular.min.js'></script>
-
-<script src="../bower_components/angular-material/modules/js/tabs/tabs.js"></script>
-<script src="../kds-stepper.js"></script>
-<script src="app.js"></script>
-</body>
-</html>

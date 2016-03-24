@@ -2,7 +2,7 @@
  * Created by NDS on 04/01/2016.
  */
 
-angular.module('myApp', ['kds.stepper']);
+angular.module('myApp', ['kds.stepper', 'textAngular']);
 angular.module('myApp').config(function($mdThemingProvider) {
   $mdThemingProvider.definePalette('myNewPaletteName', {
     '50': 'ffebee',
@@ -30,11 +30,10 @@ angular.module('myApp').config(function($mdThemingProvider) {
 });
 
 angular.module('myApp').controller('myController', function($scope, $timeout){
-  $scope.myStep = 0;
 
   $scope.steps = {
-    begin: false,
-    fillForm: false
+    begin: {},
+    fillForm: {}
   };
 
 
@@ -59,12 +58,22 @@ angular.module('myApp').controller('myController', function($scope, $timeout){
     }, 2000);
   }
 
-  //console.log($scope);
+  /**
+   * @description
+   * Function to sign up the user
+   */
+  $scope.signUp = function (param) {
+    $scope.steps.fillForm.loading = true;
 
-  $scope.isTrue = function (param) {
-    if(param !== undefined){
-      return param;
-    }
-    return true;
+
+    // Simulate time for the request the API
+    $timeout(function (){
+      //$scope.steps.fillForm.warning = true;
+      $scope.steps.fillForm.loading = false;
+      $scope.steps.fillForm.done = true;
+    }, 5000);
+
   }
+
+
 });

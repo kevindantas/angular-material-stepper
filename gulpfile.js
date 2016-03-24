@@ -33,6 +33,7 @@ gulp.task('compress', function() {
 gulp.task('sass', function () {
   gulp.src('./src/scss/*.scss')
       .pipe(sass().on('error', sass.logError))
+      .pipe(concat('kds-stepper.css'))
       .pipe(gulp.dest('./src'));
 });
 
@@ -45,7 +46,7 @@ gulp.task('server', function () {
 })
 
 
-gulp.task('default', ['sass', 'concat', 'server'], function () {
+gulp.task('default', ['sass', 'concat', 'compress', 'server'], function () {
   gulp.watch('./src/scss/*.scss', ['sass']);
 
   gulp.watch('./src/*.js', ['concat']);

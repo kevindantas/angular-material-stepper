@@ -15,6 +15,7 @@
  *  </hljs>
  *
  *  @param {=string} kds-orientation Stepper orientation
+ *  @param {=integer} current-step Active step
  */
 angular
   .module('kds.stepper')
@@ -23,9 +24,9 @@ angular
 function KdsStepper($mdTheming, $compile) {
   return {
     scope:            {
-      currentStep: '=',
-      isLoading: '=',
-      loadingMessage: '='
+      currentStep: '=?',
+      isLoading: '=?',
+      loadingMessage: '=?'
     },
     restrict:         'EA',
     controller:       'KdsStepperController',
@@ -46,24 +47,37 @@ function KdsStepper($mdTheming, $compile) {
         '</kds-step-loading>'+
         '<kds-step ng-if="$kdsStepperCtrl.checkPage($index)" ng-repeat="step in $kdsStepperCtrl.steps"></kds-step>' +
         '</kds-steps-content>';
+
     },
     link:             function (scope, elem, attr, controller, transclude) {
       var stepper   = elem.contents(),
           templates = attr.$kdsSteps,
           steps     = [],
-          label, template;
+          label, template, optional;
 
       for (var i = 0; i < templates.length; i++) {
+
         label = templates[i].getAttribute('label');
         templates[i].removeAttribute('label');
 
         //console.log(templates[i].getAttribute('message'));
         var message = templates[i].getAttribute('message') || controller.defaultMessage;
         template = templates[i];
+
+        label = template.getAttribute('label');
+        template.removeAttribute('label');
+
+
+        var attrOptional = template.getAttribute('step-optional');
+        optional         = attrOptional == "" || attrOptional == true;
+
+
         steps.push({
-          label: label,
-          elem:  template,
-          message: message
+          label:    label,
+          elem:     template,
+          done:     false,
+          message: message,
+        optional: optional
         });
       }
       controller.steps = steps;
@@ -91,34 +105,18 @@ function KdsStepperWrapper() {
     template: function () {
       return '' +
         '<kds-step-item flex layout="row" layout-align="center center" ng-repeat="step in $kdsStepperCtrl.steps" ' +
-        'ng-disabled="$kdsStepperCtrl.isDisabled(this)" kds-step-done="true" ng-click="$kdsStepperCtrl.nextStepItem($event, this)"' +
-        'ng-class="{active: $index == $kdsStepperCtrl.currentStep, disabled: $index > $kdsStepperCtrl.currentStep+1}" md-ink-ripple="#aaa">' +
-        '<md-button flex="none" class="md-fab md-mini md-primary"  md-no-ink  aria-label="{{step.attrs.kdsLabel}}"' +
-        'ng-disabled="$kdsStepperCtrl.isDisabled(this)">' +
-        '<md-icon md-svg-icon="md-done" ng-show="step.done"></md-icon> <span ng-show="!step.done">{{ ($index + 1) }}</span> ' +
+        'ng-disabled="$kdsStepperCtrl.isDisabled(this)" kds-step-done="true" ng-click="$kdsStepperCtrl.changeStepItem($event, this)"' +
+        'ng-class="{active: $index == $kdsStepperCtrl.currentStep}" md-ink-ripple="#aaa">' +
+        '<md-button flex="none" class="md-fab md-mini md-primary"  md-no-ink  aria-label="{{step.attrs.kdsLabel}}">' +
+        '<md-icon md-svg-icon="md-done" ng-show="step.done"></md-icon>' +
+        '<md-icon md-svg-icon="md-warning" ng-show="step.warning"></md-icon>' +
+        '<md-icon md-svg-icon="md-error" ng-show="step.error"></md-icon>' +
+        '<span ng-show="!step.done">{{ ($index + 1) }}</span> ' +
         '</md-button>' +
         '<span flex="none"> {{ step.label ||  $kdsStepperCtrl.stepLabel + ($index+1) }}  </span>' +
         '<span flex style="height: 1px; background:rgba(0,0,0,.15); margin-left: 8px"></span> ' +
         '</kds-step-item>';
-    },
-  }
-}
-
-
-/**
- * @ngdoc directive
- * @name kdsStepsWrapper
- * @description
- * The wrapper for the steps pagination
- * @restrict E
- */
-angular.module('kds.stepper')
-  .directive('kdsStepItem', KdsStepItem);
-
-function KdsStepItem() {
-  return {
-    restrict: 'E',
-    require:  '^kdsStepper',
+    }
   }
 }
 
@@ -148,6 +146,9 @@ function kdsStepsContent() {
  * @description
  * The directive `<kds-stepper>` serves as the container for `<kds-step>` child directives to produces a Stepper component.
  * @restrict E
+ *
+ *
+ * @param {=boolean} stepOptional If the  step is required the following steps will be disabled
  */
 angular
   .module('kds.stepper')
@@ -160,7 +161,6 @@ function KdsStep($compile) {
     require:  '^kdsStepper',
     link:     function (scope, elem, attrs, controller) {
       //ng-if="$kdsStepperCtrl.checkPage($index)" ng-repeat="step in $kdsStepperCtrl.steps"
-
       var stepElem      = scope.$parent.step.elem,
           attributesMap = stepElem.attributes;
 
@@ -170,32 +170,55 @@ function KdsStep($compile) {
 
       var kdsSteps    = elem.parent().children(),
           i           = Array.prototype.indexOf.call(kdsSteps, elem[0]),
-          mdContent   = angular.element('<md-content></md-content>'),
           parentScope = scope.$parent.$parent.$parent, // TODO: Check if there's a better solution
           stepContent = $compile(stepElem.innerHTML)(parentScope);
 
+      elem.append(stepContent);
 
-      mdContent.append(stepContent);
-      elem.append(mdContent);
-      var a = this;
 
       // Go to the next step if close the actual step
       scope.$watch(function () {
         return parentScope.$eval(attrs.stepDone);
-      }, function (newVal, oldVal, a, b) {
-        if(newVal && !oldVal) {
+      }, function (newVal, oldVal) {
+        if (controller.steps[controller.currentStep]) {
+
+        }
+        if (newVal && !oldVal) {
           controller.steps[controller.currentStep].done = true;
           controller.currentStep++;
         }
       });
+
+
+      // Indicate warning icon
+      scope.$watch(function () {
+        return parentScope.$eval(attrs.stepWarning);
+      }, function (newVal, oldVal) {
+        if (newVal) controller.steps[controller.currentStep].warning = true;
+      });
+
+      scope.$watch(function () {
+        return parentScope.$eval(attrs.stepError);
+      }, function (newVal, oldVal) {
+        if (newVal) controller.steps[controller.currentStep].error = true;
+      });
+
+
     }
   }
 }
 KdsStep.$inject = ['$compile'];
 
 
+/**
+ * @description
+ * Transform a string with dash(-) separation into camelCase
+ *
+ * @param {string} name - string that should be normalized
+ * @returns string
+ */
 function normalizeName(name) {
-  var ind       = name.indexOf('-');
+  var ind = name.indexOf('-');
 
   if (ind > -1) {
     name          = name.replace('-', '');
