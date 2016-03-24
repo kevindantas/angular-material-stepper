@@ -1,0 +1,19 @@
+<h2>Step Two</h2>
+<form name="randomForm" flex ng-submit="signUp()">
+  <div layout="row" flex>
+    <md-input-container flex="100">
+      <label>Name</label>
+      <input type="text" name="firstName" ng-model="user.name" required>
+    </md-input-container>
+
+    <md-input-container flex="50">
+      <label>Email</label>
+      <input type="email" name="email" ng-model="user.email" required>
+    </md-input-container>
+  </div>
+
+  <md-button class="md-raised md-primary" type="submit">
+
+    Confirm
+  </md-button>
+</form>

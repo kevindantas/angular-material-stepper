@@ -1,0 +1,367 @@
+<div layout="column" ui-view>
+  <div flex layout="row" layout-align="center center">
+    <div flex="90" layout-padding>
+      <h1>Horizontal</h1>
+
+      <kds-stepper md-theme="mytheme" is-loading="isLoading" current-step="step">
+        
+        <kds-step label="Let's Begin!" step-done="steps.begin" message="Step 1 looks great! Step 2 is coming up.">
+          <form action="#" layout="column">
+            <h2>First Time!</h2>
+            <h3>Here </h3>
+            <!--<div text-angular="text-angular" name="htmlcontent" ng-model="htmlcontent"></div>-->
+            <p>You can click on the button bellow to go to the next step after you agree the term and conditions</p>
+
+            <md-checkbox required ng-model="user.accept">
+              Accept the term and conditions
+            </md-checkbox>
+
+            <div ui-view="fillForm"></div>
+
+            <div layout="row">
+              <md-button class="md-primary md-raised" ng-disabled="!user.accept" ng-click="beginStep()">Let's Go!!!</md-button>
+            </div>
+          </form>
+        </kds-step>
+
+        <kds-step label="Fill the form" step-done="steps.fillForm.done">
+          <h1>dawdawdw</h1>
+          <!--<div ui-view="fillForm"></div>-->
+        </kds-step>
+
+        <kds-step label="Check it out">
+          <h2>Step Three</h2>
+
+          <h3>Name: {{user.name}}</h3>
+          <h5>Email: {{user.email}}</h5>
+
+        </kds-step>
+      </kds-stepper>
+    </div>
+  </div>
+
+  <div flex layout="row" layout-align="center" layout-padding>
+    <!--<kds-stepper>
+      <kds-step label="Informações Básicas" step-optional step-done="steps.infos">
+        <form name="experienciaCreate" class="jornada" enctype="multipart/form-data"
+              novalidate layout="column" layout-padding>
+
+          <md-input-container class="md-no-anim">
+            <input type="text" name="nome" ng-model="experiencia.nome" placeholder="Nome" required>
+            <div ng-messages="experienciaCreate.nome.$error" ng-if="main.validInput(experienciaCreate, 'nome')">
+              <div ng-message="required">A descrição é obrigatória</div>
+              <span ng-message="server">{{experienciaCreate.descricao.$error.server.message}}</span>
+            </div>
+          </md-input-container>
+
+          <md-input-container class="preview-image">
+            <input-photo-preview name="foto" file-model="experiencia.foto"></input-photo-preview>
+          </md-input-container>
+
+          <md-input-container class="md-no-anim">
+            <label>Descricao</label>
+            <div text-angular ng-model="experiencia.descricao" name="descricao" class="md-input"
+                 placeholder="Digite a descrição da experiencia..." rows="5" required></div>
+            <div ng-messages="experienciaCreate.descricao.$error" ng-if="main.validInput(experienciaCreate, 'descricao')">
+              <div ng-message="required">A descrição é obrigatória</div>
+            </div>
+          </md-input-container>
+
+          <div ng-if="is.saving" md-theme="success">
+            <md-progress-linear md-mode="indeterminate"></md-progress-linear>
+          </div>
+
+          <div layout-align="end" layout="row">
+            <div class="" md-theme="success">
+              <md-button class="md-warn" type="reset" ng-disabled="is.saving">Limpar</md-button>
+
+              <md-button class="md-raised md-primary" ng-disabled="is.saving" ng-if="experiencia.id == undefined" ng-click="experienciaCreate.$valid && create($event)">Salvar</md-button>
+              <md-button class="md-raised md-primary" ng-disabled="is.saving" ng-if="experiencia.id !== undefined" ng-click="experienciaCreate.$valid && edit($event)">Editar</md-button>
+            </div>
+          </div>
+        </form>
+
+      </kds-step>
+
+      <kds-step label="Selecionar Capacidade Técnica" step-optional>
+        <md-content class="curriculo" md-theme="success" layout="row" flex layout-align="center">
+
+          <div class="curriculo-content" layout="row">
+
+            &lt;!&ndash;======== Areas ========&ndash;&gt;
+            <div flex>
+              <div id="areas" class="grid-content">
+                <form action="#">
+                  <h4>Áreas</h4>
+                  <input type="text" class="input-search" placeholder="Pesquisar Área" ng-model="search.area.descricao">
+                </form>
+
+                <md-progress-circular md-mode="indeterminate" class="md-hue-3 md-accent" ng-if="is.loading"></md-progress-circular>
+
+                <ul>
+                  <li ng-if="!all.length && is.loading == undefined">Sem áreas cadastradas</li>
+                  <li class="card"
+                      ng-class="{active: current.area.id == area.id, disabled: current.area.id != area.id && current.area != undefined}"
+                      id="{{area.id}}"
+                      ng-repeat="area in jornada.areas | filter: search.area.descricao" ng-click="currentItem({area: area})" animate-end-repeat>
+
+                    <md-content><h3>{{ area.descricao }} </h3></md-content>
+
+                    <div class="md-actions">
+                      <span><small>{{ criteriosCount(area.id, 'area') }} critérios selecionados nessa área</small></span>
+                    </div>
+
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            &lt;!&ndash;======== Competencias ========&ndash;&gt;
+            <div flex>
+              <form action="#">
+                <h4>Competências</h4>
+                <input type="text" class="input-search" placeholder="Pesquisar Competência" ng-model="search.competencia.descricao">
+              </form>
+
+              <md-progress-circular md-mode="indeterminate" class="md-hue-3 md-accent" ng-if="is.loading"></md-progress-circular>
+
+              <ul>
+                <li ng-repeat="competencia in jornada.competencias | filter: search.competencia.descricao"
+                    ng-click="currentItem({competencia: competencia})" animate-end-repeat
+                    ng-if="competencia.parent == current.area.id" class="card" id="{{competencia.id}}"
+                    ng-class="{active: current.competencia.id == competencia.id, disabled: current.competencia.id != competencia.id && current.competencia != undefined}">
+
+                  <md-content><p>{{ ::competencia.descricao }} </p></md-content>
+
+                  <div class="md-actions">
+                    <span><small>{{ criteriosCount(area.id, 'area') }} critérios selecionados nessa área</small></span>
+                  </div>
+
+                </li>
+                <li ng-if="!jornada.competencia.length && is.loading == undefined">Sem áreas cadastradas</li>
+              </ul>
+            </div>
+
+            &lt;!&ndash;======== Capacidades ========&ndash;&gt;
+            <div flex>
+              <form action="#">
+                <h4>Capacidades</h4>
+                <input type="text" class="input-search" placeholder="Pesquisar Capacidades" ng-model="search.capacidade.descricao">
+              </form>
+
+              <md-progress-circular md-mode="indeterminate" class="md-hue-3 md-accent" ng-if="is.loading"></md-progress-circular>
+
+              <ul>
+                <li ng-repeat="capacidade in jornada.capacidades | filter: search.capacidade.descricao"
+                    ng-click="currentItem({capacidade: capacidade})" animate-end-repeat
+                    ng-if="capacidade.parent == current.competencia.id" class="card" id="{{capacidade.id}}"
+                    ng-class="{active: current.capacidade.id == capacidade.id, disabled: current.capacidade.id != capacidade.id && current.capacidade != undefined}">
+
+                  <md-content><p>{{ ::capacidade.descricao }} </p></md-content>
+
+                  <div class="md-actions">
+                    <span><small>{{ criteriosCount(area.id, 'area') }} critérios selecionados nessa área</small></span>
+                  </div>
+
+                </li>
+                <li ng-if="!jornada.capacidade.length && is.loading == undefined">Sem capacidades cadastradas</li>
+              </ul>
+            </div>
+
+            &lt;!&ndash;======== Conhecimentos ========&ndash;&gt;
+            <div flex>
+              <form action="#">
+                <h4>Conhecimento</h4>
+                <input type="text" class="input-search" placeholder="Pesquisar Conhecimento" ng-model="search.conhecimento.descricao">
+              </form>
+
+              <md-progress-circular md-mode="indeterminate" class="md-hue-3 md-accent" ng-if="is.loading"></md-progress-circular>
+
+              <ul>
+                <li ng-repeat="conhecimento in jornada.conhecimentos | filter: search.conhecimento.descricao"
+                    ng-click="currentItem({conhecimento: conhecimento})" animate-end-repeat
+                    ng-if="conhecimento.parent == current.capacidade.id" class="card" id="{{conhecimento.id}}"
+                    ng-class="{active: current.conhecimento.id == conhecimento.id, disabled: current.conhecimento.id != conhecimento.id && current.conhecimento != undefined}">
+
+                  <md-content><p>{{ ::conhecimento.descricao }} </p></md-content>
+
+                  <div class="md-actions">
+                    <span><small>{{ criteriosCount(area.id, 'area') }} critérios selecionados nessa área</small></span>
+                  </div>
+
+                </li>
+                <li ng-if="!jornada.conhecimento.length && is.loading == undefined">Sem conhecimentos cadastradas</li>
+              </ul>
+            </div>
+
+            &lt;!&ndash;======== Critérios ========&ndash;&gt;
+            <div flex>
+              <form action="#">
+                <h4>Critérios</h4>
+                <input type="text" class="input-search" placeholder="Pesquisar Critérios" ng-model="search.criterio.descricao">
+              </form>
+
+              <md-progress-circular md-mode="indeterminate" class="md-hue-3 md-accent" ng-if="is.loading"></md-progress-circular>
+
+              <ul>
+                <li ng-repeat="criterio in jornada.criteriosAvaliacao | filter: search.criterio.descricao"
+                    ng-click="currentItem({criterio: criterio})" animate-end-repeat
+                    ng-if="criterio.parent == current.conhecimento.id" class="card" id="{{criterio.id}}"
+                    ng-class="{active: current.criterio.id == criterio.id || isSelected(criterio.id), disabled: current.criterio.id != criterio.id && current.criterio != undefined}">
+
+                  <md-content><p>{{ ::criterio.descricao }} </p></md-content>
+
+                  <div class="md-actions" md-theme="success">
+                    <md-button ng-if="!isSelected(criterio.id)" class="md-primary md-raised" ng-click="selectCriterio(criterio)">Selecionar
+                    </md-button>
+                    <md-button ng-if="isSelected(criterio.id)" class="md-primary md-raised" ng-click="removeCriterio(criterio)">Remover</md-button>
+                  </div>
+
+                </li>
+                <li ng-if="!jornada.criterio.length && is.loading == undefined">Sem criterios cadastradas</li>
+              </ul>
+            </div>
+
+          </div>
+
+        </md-content>
+      </kds-step>
+
+      <kds-step label="Selecionar Capacidade Atitudinal">
+        <md-content class="curriculo" md-theme="success" layout="row" flex layout-align="center">
+          <div class="curriculo-content" layout="row">
+            <div flex>
+              <form action="#">
+                <h4>Capacidades</h4>
+                <input type="text" class="input-search" placeholder="Pesquisar Capacidades" ng-model="search.capacidade.descricao">
+              </form>
+
+              <md-progress-circular md-mode="indeterminate" class="md-hue-3 md-accent" ng-if="is.loading"></md-progress-circular>
+
+              <ul>
+                <li ng-repeat="capacidadeAtitudinal in jornada.capacidadesAtitudinais | filter: search.capacidadeAtitudinal.descricao"
+                    ng-click="currentItem({capacidadeAtitudinal: capacidadeAtitudinal})" animate-end-repeat
+                    class="card" id="{{capacidadeAtitudinal.id}}"
+                    ng-class="{active: current.capacidadeAtitudinal.id == capacidadeAtitudinal.id, disabled: current.capacidadeAtitudinal.id != capacidadeAtitudinal.id && current.capacidade != undefined}">
+
+                  <md-content><p>{{ ::capacidadeAtitudinal.descricao }} </p></md-content>
+
+                  <div class="md-actions">
+                    <span><small>{{ criteriosCount(area.id, 'area') }} critérios selecionados nessa área</small></span>
+                  </div>
+
+                </li>
+                <li ng-if="!jornada.capacidadesAtitudinais.length && is.loading == undefined">Sem capacidades atitudinais cadastradas</li>
+              </ul>
+            </div>
+
+
+            <div flex>
+              <form action="#">
+                <h4>Critérios Atitudinais</h4>
+                <input type="text" class="input-search" placeholder="Pesquisar Critérios" ng-model="search.criterioatitudinal.descricao">
+              </form>
+
+              <md-progress-circular md-mode="indeterminate" class="md-hue-3 md-accent" ng-if="is.loading"></md-progress-circular>
+
+              <ul>
+                <li ng-repeat="criterioAtitudinal in jornada.criteriosAvaliacaoAtitudinal | filter: search.criterioAtitudinal.descricao"
+                    ng-click="currentItem({criterioAtitudinal: criterioAtitudinal})" animate-end-repeat
+                    ng-if="criterioAtitudinal.parent == current.capacidadeAtitudinal.id" class="card" id="{{criterioAtitudinal.id}}"
+                    ng-class="{active: current.criterioAtitudinal.id == criterioAtitudinal.id || isSelectedAtitudinal(criterioAtitudinal.id), disabled: current.criterioAtitudinal.id != criterioAtitudinal.id && current.criterioAtitudinal != undefined}">
+
+                  <md-content><p>{{ ::criterioAtitudinal.descricao }} </p></md-content>
+
+                  <div class="md-actions" md-theme="success">
+                    <md-button ng-if="!isSelectedAtitudinal(criterioAtitudinal.id)" class="md-primary md-raised" ng-click="selectCriterioAtitudinal(criterioAtitudinal)">Selecionar
+                    </md-button>
+                    <md-button ng-if="isSelectedAtitudinal(criterioAtitudinal.id)" class="md-primary md-raised" ng-click="removeCriterioAtitudinal(criterioAtitudinal)">Remover</md-button>
+                  </div>
+
+                </li>
+                <li ng-if="!jornada.criterioAtitudinal.length && is.loading == undefined">Sem criterios cadastradas</li>
+              </ul>
+            </div>
+          </div>
+        </md-content>
+      </kds-step>
+
+    </kds-stepper>-->
+  </div>
+
+  <div flex layout="row" layout-align="center center">
+    <md-tabs flex="90">
+      <md-tab label="Tab 1">
+
+        <p flex="50">Lorem ipsum dolor sit amet, consectetur adipisicing elit. A aliquam architecto eligendi laudantium
+          natus necessitatibus omnis perspiciatis qui repudiandae vel. Ab ad culpa doloribus ipsum labore omnis quam sit
+          suscipit.</p>
+        <p flex="50">Lorem ipsum dolor sit amet, consectetur adipisicing elit. A aliquam architecto eligendi laudantium
+          natus necessitatibus omnis perspiciatis qui repudiandae vel. Ab ad culpa doloribus ipsum labore omnis quam sit
+          suscipit.</p>
+
+      </md-tab>
+      <md-tab>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. A aliquam architecto eligendi laudantium natus
+          necessitatibus omnis perspiciatis qui repudiandae vel. Ab ad culpa doloribus ipsum labore omnis quam sit
+          suscipit.</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. A aliquam architecto eligendi laudantium natus
+          necessitatibus omnis perspiciatis qui repudiandae vel. Ab ad culpa doloribus ipsum labore omnis quam sit
+          suscipit.</p>
+      </md-tab>
+    </md-tabs>
+  </div>
+  <div flex layout="row" layout-align="center center">
+    <md-list>
+      <md-subheader class="md-no-sticky">3 line item</md-subheader>
+      <md-list-item class="md-3-line" ng-repeat="item in todos">
+        <img ng-src="{{item.face}}?{{$index}}" class="md-avatar" alt="{{item.who}}" />
+        <div class="md-list-item-text" layout="column">
+        </div>
+      </md-list-item>
+      <md-divider ></md-divider>
+      <md-subheader class="md-no-sticky">2 line item</md-subheader>
+      <md-list-item class="md-2-line">
+        <img ng-src="{{todos[0].face}}?20" class="md-avatar" alt="{{todos[0].who}}" />
+        <div class="md-list-item-text">
+          <h3>{{ todos[0].who }}</h3>
+          <p>Secondary text</p>
+        </div>
+      </md-list-item>
+      <md-divider ></md-divider>
+      <md-subheader class="md-no-sticky">3 line item, long paragraph (see on mobile)</md-subheader>
+      <md-list-item class="md-3-line md-long-text">
+        <img ng-src="{{todos[0].face}}?25" class="md-avatar" alt="{{todos[0].who}}" />
+        <div class="md-list-item-text">
+          <h3>{{ todos[0].who }}</h3>
+          <p>
+            Secondary line text Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam massa quam.
+            Nulla metus metus, ullamcorper vel, tincidunt sed, euismod in, nibh. Quisque volutpat condimentum
+            velit. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.
+          </p>
+        </div>
+      </md-list-item>
+      <md-list-item class="md-3-line md-long-text">
+        <img ng-src="{{todos[1].face}}?25" class="md-avatar" alt="{{todos[1].who}}" />
+        <div class="md-list-item-text">
+          <h3>{{ todos[1].who }}</h3>
+          <p>
+            Secondary line text Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam massa quam.
+            Nulla metus metus, ullamcorper vel, tincidunt sed, euismod in, nibh. Quisque volutpat condimentum
+            velit. Class aptent taciti sociosqu ad litra torquent per conubia nostra, per inceptos himenaeos.
+          </p>
+        </div>
+      </md-list-item>
+      <md-divider ></md-divider>
+      <md-subheader class="md-no-sticky">Classes</md-subheader>
+      <md-list-item class="md-2-line" ng-repeat="phone in phones">
+        <md-icon md-svg-icon="communication:phone" ng-if="$index !== 2" ng-class="{'md-avatar-icon': $index === 1}"></md-icon>
+        <div class="md-list-item-text" ng-class="{'md-offset': $index == 2 }">
+          <h3> {{ phone.number }} </h3>
+          <p> {{ phone.type }} </p>
+        </div>
+      </md-list-item>
+    </md-list>
+  </div>
+
+</div>
