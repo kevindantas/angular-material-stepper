@@ -39,11 +39,14 @@ gulp.task('sass', function () {
 
 
 gulp.task('server', function () {
-  gulp.src('./')
+  gulp.src('./demo')
     .pipe(server({
-      host: '0.0.0.0'
+      host: '0.0.0.0',
+      port: 8077,
+        directoryListing: true,
+        open: true
     }))
-})
+});
 
 
 gulp.task('default', ['sass', 'concat', 'compress', 'server'], function () {

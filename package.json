@@ -3,7 +3,9 @@
   "version": "0.1.0",
   "description": "        return 'column';fe",
   "main": "gulpfile.js",
-  "dependencies": {},
+  "dependencies": {
+    "angular-material": "^1.0.6"
+  },
   "devDependencies": {
     "gulp": "~3.9.0",
     "gulp-concat": "^2.6.0",
