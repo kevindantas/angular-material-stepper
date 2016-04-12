@@ -14,7 +14,7 @@ var server = require('gulp-webserver');
 
 
 gulp.task('concat', function() {
-  return gulp.src('./src/*.js')
+  return gulp.src(['./src/kdsStepper.js', './src/kdsStepperController.js', './src/kdsStepperDirective.js'])
     .pipe(concat('kds-stepper.js'))
     .pipe(gulp.dest('.'));
 });

@@ -10,8 +10,8 @@
 
   <!-- Angular Material requires Angular.js Libraries -->
   <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js"></script>
-  <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
-  <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
+  <!--<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">-->
+  <!--<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">-->
   <link rel="stylesheet" href="../src/kds-stepper.css">
 
 </head>
@@ -21,7 +21,22 @@
     <div flex="90" layout-padding>
       <h1>Horizontal</h1>
 
-      <kds-stepper md-theme="mytheme" is-loading="isLoading" loading-message="messages.loading" current-step="myContrller.step">
+      <kds-stepper>
+        <kds-step label="Step 1">
+            <h2>dawda dwa</h2>
+          <h1>First</h1>
+        </kds-step>
+
+        <kds-step label="Step 2">
+          <h1>Second</h1>
+        </kds-step>
+
+        <kds-step label="Step 3">
+          <h1>Third</h1>
+        </kds-step>
+      </kds-stepper>
+
+      <!--<kds-stepper md-theme="mytheme" is-loading="isLoading" loading-message="messages.loading" current-step="myContrller.step">
 
         <kds-step label="Let's Begin!" step-done="steps.begin" message="Step 1 looks great! Step 2 is coming up.">
           <form action="#" layout="column">         
@@ -69,11 +84,11 @@
           <h5>Email: {{user.email}}</h5>
 
         </kds-step>
-      </kds-stepper>
+      </kds-stepper>-->
     </div>
   </div>
 
-  <div flex layout="row" layout-align="center" layout-padding>
+  <!--<div flex layout="row" layout-align="center" layout-padding>
     <kds-stepper>
       <kds-step label="Informações Básicas" step-optional step-done="steps.infos">
         <form name="experienciaCreate" class="jornada" enctype="multipart/form-data"
@@ -121,7 +136,7 @@
 
           <div class="curriculo-content" layout="row">
 
-            <!--======== Areas ========-->
+            &lt;!&ndash;======== Areas ========&ndash;&gt;
             <div flex>
               <div id="areas" class="grid-content">
                 <form action="#">
@@ -149,7 +164,7 @@
               </div>
             </div>
 
-            <!--======== Competencias ========-->
+            &lt;!&ndash;======== Competencias ========&ndash;&gt;
             <div flex>
               <form action="#">
                 <h4>Competências</h4>
@@ -175,7 +190,7 @@
               </ul>
             </div>
 
-            <!--======== Capacidades ========-->
+            &lt;!&ndash;======== Capacidades ========&ndash;&gt;
             <div flex>
               <form action="#">
                 <h4>Capacidades</h4>
@@ -201,7 +216,7 @@
               </ul>
             </div>
 
-            <!--======== Conhecimentos ========-->
+            &lt;!&ndash;======== Conhecimentos ========&ndash;&gt;
             <div flex>
               <form action="#">
                 <h4>Conhecimento</h4>
@@ -227,7 +242,7 @@
               </ul>
             </div>
 
-            <!--======== Critérios ========-->
+            &lt;!&ndash;======== Critérios ========&ndash;&gt;
             <div flex>
               <form action="#">
                 <h4>Critérios</h4>
@@ -320,9 +335,9 @@
       </kds-step>
 
     </kds-stepper>
-  </div>
+  </div>-->
 
-  <div flex layout="row" layout-align="center center">
+  <!--<div flex layout="row" layout-align="center center">
     <md-tabs flex="90">
       <md-tab label="Tab 1">
 
@@ -343,7 +358,7 @@
           suscipit.</p>
       </md-tab>
     </md-tabs>
-  </div>
+  </div>-->
 </div>
 
 

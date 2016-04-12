@@ -1,13 +1,12 @@
-
 angular
-    .module('kds.stepper')
-    .controller('KdsStepperController', KdsStepperController);
+  .module('kds.stepper')
+  .controller('KdsStepperController', KdsStepperController);
 
 /**
  * ngInject
  */
 function KdsStepperController ($scope, $element, $window, $mdConstant, $mdTabInkRipple,
-                           $mdUtil, $animateCss, $attrs, $compile, $mdTheming) {
+                               $mdUtil, $animateCss, $attrs, $compile, $mdTheming) {
   // define private properties
   var ctrl      = this,
       locked    = false,
@@ -33,13 +32,14 @@ function KdsStepperController ($scope, $element, $window, $mdConstant, $mdTabInk
   defineBooleanAttribute('swipeContent');
   defineBooleanAttribute('noDisconnect');
   defineBooleanAttribute('autoselect');
+  defineBooleanAttribute('noSelectClick');
   defineBooleanAttribute('centerTabs', handleCenterTabs, false);
   defineBooleanAttribute('enableDisconnect');
 
   // define public properties
   ctrl.scope             = $scope;
   ctrl.parent            = $scope.$parent;
-  ctrl.tabs              = [];
+  ctrl.steps              = [];
   ctrl.lastSelectedIndex = null;
   ctrl.hasFocus          = false;
   ctrl.lastClick         = true;
@@ -79,7 +79,7 @@ function KdsStepperController ($scope, $element, $window, $mdConstant, $mdTabInk
       updateHeightFromContent();
       adjustOffset();
       updateInkBarStyles();
-      ctrl.tabs[ ctrl.selectedIndex ] && ctrl.tabs[ ctrl.selectedIndex ].scope.select();
+      ctrl.steps[ ctrl.selectedIndex ] && ctrl.steps[ ctrl.selectedIndex ].scope.select();
       loaded = true;
       updatePagination();
     });
@@ -90,11 +90,11 @@ function KdsStepperController ($scope, $element, $window, $mdConstant, $mdTabInk
    * directive's template function.
    */
   function compileTemplate () {
-    var template = $attrs.$mdTabsTemplate,
+    var template = $attrs.$kdsStepsTemplate,
         element  = angular.element(elements.data);
     element.html(template);
     $compile(element.contents())(ctrl.parent);
-    delete $attrs.$mdTabsTemplate;
+    delete $attrs.$kdsStepsTemplate;
   }
 
   /**
@@ -109,7 +109,7 @@ function KdsStepperController ($scope, $element, $window, $mdConstant, $mdTabInk
    * Configure watcher(s) used by Tabs
    */
   function configureWatchers () {
-    $scope.$watch('$mdTabsCtrl.selectedIndex', handleSelectedIndexChange);
+    $scope.$watch('$kdsStepperCtrl.selectedIndex', handleSelectedIndexChange);
   }
 
   /**
@@ -226,12 +226,12 @@ function KdsStepperController ($scope, $element, $window, $mdConstant, $mdTabInk
     updateHeightFromContent();
     adjustOffset(newValue);
     $scope.$broadcast('$mdTabsChanged');
-    ctrl.tabs[ oldValue ] && ctrl.tabs[ oldValue ].scope.deselect();
-    ctrl.tabs[ newValue ] && ctrl.tabs[ newValue ].scope.select();
+    ctrl.steps[ oldValue ] && ctrl.steps[ oldValue ].scope.deselect();
+    ctrl.steps[ newValue ] && ctrl.steps[ newValue ].scope.select();
   }
 
   function getTabElementIndex(tabEl){
-    var tabs = $element[0].getElementsByTagName('md-tab');
+    var tabs = $element[0].getElementsByTagName('kds-step');
     return Array.prototype.indexOf.call(tabs, tabEl[0]);
   }
 
@@ -285,16 +285,19 @@ function KdsStepperController ($scope, $element, $window, $mdConstant, $mdTabInk
   }
 
   /**
-   * Update the selected index and trigger a click event on the original `md-tab` element in order
-   * to fire user-added click events.
+   * Update the selected index. Triggers a click event on the original `md-tab` element in order
+   * to fire user-added click events if canSkipClick or `md-no-select-click` are false.
    * @param index
+   * @param canSkipClick Optionally allow not firing the click event if `md-no-select-click` is also true.
    */
-  function select (index) {
+  function select (index, canSkipClick) {
     if (!locked) ctrl.focusIndex = ctrl.selectedIndex = index;
     ctrl.lastClick = true;
+    // skip the click event if noSelectClick is enabled
+    if (canSkipClick && ctrl.noSelectClick) return;
     // nextTick is required to prevent errors in user-defined click events
     $mdUtil.nextTick(function () {
-      ctrl.tabs[ index ].element.triggerHandler('click');
+      ctrl.steps[ index ].element.triggerHandler('click');
     }, false);
   }
 
@@ -365,13 +368,13 @@ function KdsStepperController ($scope, $element, $window, $mdConstant, $mdTabInk
   function removeTab (tabData) {
     if (destroyed) return;
     var selectedIndex = ctrl.selectedIndex,
-        tab           = ctrl.tabs.splice(tabData.getIndex(), 1)[ 0 ];
+        tab           = ctrl.steps.splice(tabData.getIndex(), 1)[ 0 ];
     refreshIndex();
     // when removing a tab, if the selected index did not change, we have to manually trigger the
     //   tab select/deselect events
     if (ctrl.selectedIndex === selectedIndex) {
       tab.scope.deselect();
-      ctrl.tabs[ ctrl.selectedIndex ] && ctrl.tabs[ ctrl.selectedIndex ].scope.select();
+      ctrl.steps[ ctrl.selectedIndex ] && ctrl.steps[ ctrl.selectedIndex ].scope.select();
     }
     $mdUtil.nextTick(function () {
       updatePagination();
@@ -388,22 +391,22 @@ function KdsStepperController ($scope, $element, $window, $mdConstant, $mdTabInk
   function insertTab (tabData, index) {
     var hasLoaded = loaded;
     var proto     = {
-          getIndex:     function () { return ctrl.tabs.indexOf(tab); },
+          getIndex:     function () { return ctrl.steps.indexOf(tab); },
           isActive:     function () { return this.getIndex() === ctrl.selectedIndex; },
           isLeft:       function () { return this.getIndex() < ctrl.selectedIndex; },
           isRight:      function () { return this.getIndex() > ctrl.selectedIndex; },
           shouldRender: function () { return !ctrl.noDisconnect || this.isActive(); },
           hasFocus:     function () {
             return !ctrl.lastClick
-                && ctrl.hasFocus && this.getIndex() === ctrl.focusIndex;
+              && ctrl.hasFocus && this.getIndex() === ctrl.focusIndex;
           },
           id:           $mdUtil.nextUid()
         },
         tab       = angular.extend(proto, tabData);
     if (angular.isDefined(index)) {
-      ctrl.tabs.splice(index, 0, tab);
+      ctrl.steps.splice(index, 0, tab);
     } else {
-      ctrl.tabs.push(tab);
+      ctrl.steps.push(tab);
     }
     processQueue();
     updateHasContent();
@@ -411,7 +414,7 @@ function KdsStepperController ($scope, $element, $window, $mdConstant, $mdTabInk
       updatePagination();
       // if autoselect is enabled, select the newly added tab
       if (hasLoaded && ctrl.autoselect) $mdUtil.nextTick(function () {
-        $mdUtil.nextTick(function () { select(ctrl.tabs.indexOf(tab)); });
+        $mdUtil.nextTick(function () { select(ctrl.steps.indexOf(tab)); });
       });
     });
     return tab;
@@ -427,17 +430,17 @@ function KdsStepperController ($scope, $element, $window, $mdConstant, $mdTabInk
     var elements = {};
 
     // gather tab bar elements
-    elements.wrapper = $element[ 0 ].getElementsByTagName('md-tabs-wrapper')[ 0 ];
-    elements.data    = $element[ 0 ].getElementsByTagName('md-tab-data')[ 0 ];
-    elements.canvas  = elements.wrapper.getElementsByTagName('md-tabs-canvas')[ 0 ];
-    elements.paging  = elements.canvas.getElementsByTagName('md-pagination-wrapper')[ 0 ];
-    elements.tabs    = elements.paging.getElementsByTagName('md-tab-item');
-    elements.dummies = elements.canvas.getElementsByTagName('md-dummy-tab');
+    elements.wrapper = $element[ 0 ].getElementsByTagName('kds-steps-wrapper')[ 0 ];
+    elements.data    = $element[ 0 ].getElementsByTagName('kds-step-data')[ 0 ];
+    elements.canvas  = elements.wrapper.getElementsByTagName('kds-steps-canvas')[ 0 ];
+    elements.paging  = elements.canvas.getElementsByTagName('kds-pagination-wrapper')[ 0 ];
+    elements.tabs    = elements.paging.getElementsByTagName('kds-step-item');
+    elements.dummies = elements.canvas.getElementsByTagName('kds-dummy-tab');
     elements.inkBar  = elements.paging.getElementsByTagName('md-ink-bar')[ 0 ];
 
     // gather tab content elements
-    elements.contentsWrapper = $element[ 0 ].getElementsByTagName('md-tabs-content-wrapper')[ 0 ];
-    elements.contents        = elements.contentsWrapper.getElementsByTagName('md-tab-content');
+    elements.contentsWrapper = $element[ 0 ].getElementsByTagName('kds-steps-content-wrapper')[ 0 ];
+    elements.contents        = elements.contentsWrapper.getElementsByTagName('kds-step-content');
 
     return elements;
   }
@@ -457,7 +460,7 @@ function KdsStepperController ($scope, $element, $window, $mdConstant, $mdTabInk
   function canPageForward () {
     var lastTab = elements.tabs[ elements.tabs.length - 1 ];
     return lastTab && lastTab.offsetLeft + lastTab.offsetWidth > elements.canvas.clientWidth +
-        ctrl.offsetLeft;
+      ctrl.offsetLeft;
   }
 
   /**
@@ -472,7 +475,7 @@ function KdsStepperController ($scope, $element, $window, $mdConstant, $mdTabInk
         return false;
       default:
         return !ctrl.shouldPaginate
-            && $window.matchMedia('(max-width: 600px)').matches;
+          && $window.matchMedia('(max-width: 600px)').matches;
     }
   }
 
@@ -503,12 +506,12 @@ function KdsStepperController ($scope, $element, $window, $mdConstant, $mdTabInk
    */
   function getNearestSafeIndex (newIndex) {
     if (newIndex === -1) return -1;
-    var maxOffset = Math.max(ctrl.tabs.length - newIndex, newIndex),
+    var maxOffset = Math.max(ctrl.steps.length - newIndex, newIndex),
         i, tab;
     for (i = 0; i <= maxOffset; i++) {
-      tab = ctrl.tabs[ newIndex + i ];
+      tab = ctrl.steps[ newIndex + i ];
       if (tab && (tab.scope.disabled !== true)) return tab.getIndex();
-      tab = ctrl.tabs[ newIndex - i ];
+      tab = ctrl.steps[ newIndex - i ];
       if (tab && (tab.scope.disabled !== true)) return tab.getIndex();
     }
     return newIndex;
@@ -564,13 +567,13 @@ function KdsStepperController ($scope, $element, $window, $mdConstant, $mdTabInk
    * This is triggered by `tabDirective.js` when the user's tabs have been re-ordered.
    */
   function updateTabOrder () {
-    var selectedItem   = ctrl.tabs[ ctrl.selectedIndex ],
-        focusItem      = ctrl.tabs[ ctrl.focusIndex ];
-    ctrl.tabs          = ctrl.tabs.sort(function (a, b) {
+    var selectedItem   = ctrl.steps[ ctrl.selectedIndex ],
+        focusItem      = ctrl.steps[ ctrl.focusIndex ];
+    ctrl.steps          = ctrl.steps.sort(function (a, b) {
       return a.index - b.index;
     });
-    ctrl.selectedIndex = ctrl.tabs.indexOf(selectedItem);
-    ctrl.focusIndex    = ctrl.tabs.indexOf(focusItem);
+    ctrl.selectedIndex = ctrl.steps.indexOf(selectedItem);
+    ctrl.focusIndex    = ctrl.steps.indexOf(focusItem);
   }
 
   /**
@@ -582,9 +585,9 @@ function KdsStepperController ($scope, $element, $window, $mdConstant, $mdTabInk
         key   = focus ? 'focusIndex' : 'selectedIndex',
         index = ctrl[ key ];
     for (newIndex = index + inc;
-         ctrl.tabs[ newIndex ] && ctrl.tabs[ newIndex ].scope.disabled;
+         ctrl.steps[ newIndex ] && ctrl.steps[ newIndex ].scope.disabled;
          newIndex += inc) {}
-    if (ctrl.tabs[ newIndex ]) {
+    if (ctrl.steps[ newIndex ]) {
       ctrl[ key ] = newIndex;
     }
   }
@@ -625,7 +628,7 @@ function KdsStepperController ($scope, $element, $window, $mdConstant, $mdTabInk
    */
   function updateHasContent () {
     var hasContent  = false;
-    angular.forEach(ctrl.tabs, function (tab) {
+    angular.forEach(ctrl.steps, function (tab) {
       if (tab.template) hasContent = true;
     });
     ctrl.hasContent = hasContent;
@@ -645,7 +648,7 @@ function KdsStepperController ($scope, $element, $window, $mdConstant, $mdTabInk
    */
   function updateHeightFromContent () {
     if (!ctrl.dynamicHeight) return $element.css('height', '');
-    if (!ctrl.tabs.length) return queue.push(updateHeightFromContent);
+    if (!ctrl.steps.length) return queue.push(updateHeightFromContent);
 
     var tabContent    = elements.contents[ ctrl.selectedIndex ],
         contentHeight = tabContent ? tabContent.offsetHeight : 0,
@@ -709,7 +712,7 @@ function KdsStepperController ($scope, $element, $window, $mdConstant, $mdTabInk
       angular.element(elements.inkBar).css({ left: 'auto', right: 'auto' });
       return;
     }
-    if (!ctrl.tabs.length) return queue.push(ctrl.updateInkBarStyles);
+    if (!ctrl.steps.length) return queue.push(ctrl.updateInkBarStyles);
     // if the element is not visible, we will not be able to calculate sizes until it is
     // we should treat that as a resize event rather than just updating the ink bar
     if (!$element.prop('offsetParent')) return handleResizeWhenVisible();
@@ -738,8 +741,8 @@ function KdsStepperController ($scope, $element, $window, $mdConstant, $mdTabInk
         ink      = angular.element(elements.inkBar);
     if (!angular.isNumber(oldIndex)) return;
     ink
-        .toggleClass('md-left', newIndex < oldIndex)
-        .toggleClass('md-right', newIndex > oldIndex);
+      .toggleClass('md-left', newIndex < oldIndex)
+      .toggleClass('md-right', newIndex > oldIndex);
   }
 
   /**
