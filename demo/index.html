@@ -21,22 +21,54 @@
     <div flex="90" layout-padding>
       <h1>Horizontal</h1>
 
-      <kds-stepper>
+      <kds-stepper md-dynamic-height>
         <kds-step label="Step 1">
-            <h2>dawda dwa</h2>
-          <h1>First</h1>
+          <div layout-padding>
+            <h1>User Infos</h1>
+            <form layout="column">
+              <md-input-container flex>
+                <label>User Name</label>
+                <input type="text" ng-model="user.name">
+              </md-input-container>
 
-          <md-button class="md-primary md-raised" ng-click="steps.step2 = true">Next step</md-button>
+              <md-input-container flex>
+                <label>Email</label>
+                <input type="text" ng-model="user.email">
+              </md-input-container>
 
+              <md-checkbox ng-model="user.premium" aria-label="Become a premium user">
+                Become premium user
+              </md-checkbox>
+            </form>
+
+            <md-button class="md-primary md-raised" ng-click="create()">Next step</md-button>
+          </div>
         </kds-step>
 
         <kds-step label="Step 2" kds-done="steps.step2">
-          {{steps.step2}}
-          <h1>Second</h1>
+          <h1>Config you account</h1>
+
+          <h3>{{user.name}}</h3>
+          <h5>{{user.email}}</h5>
+
+          <md-switch ng-model="user.config1" aria-label="Switch 1">Config 1</md-switch>
+          <md-switch ng-model="user.config2" aria-label="Switch 2" ng-true-value="'yup'" ng-false-value="'nope'" class="md-warn">
+            Config 2: {{ user.cb2 }}
+          </md-switch>
+
+          <h6>Premiun user only</h6>
+          <md-switch ng-disabled="!user.premium" aria-label="Disabled switch" ng-model="user.configPremium">
+            Premiun mega hyper config
+          </md-switch>
+
+
+          <md-button class="md-primary md-raised" ng-click="create()">Next step</md-button>
         </kds-step>
 
         <kds-step label="Step 3" kds-done="steps.step3">
-          <h1>Third</h1>
+          <h1>Confirmation</h1>
+
+          <md-button class="md-primary md-raised" ng-click="confim()">Confim</md-button>
         </kds-step>
       </kds-stepper>
 
