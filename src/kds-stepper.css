@@ -23,19 +23,19 @@ kds-stepper {
   position: relative;
   flex-shrink: 0; }
   kds-stepper:not(.md-no-tab-content):not(.md-dynamic-height) {
-    min-height: 248px; }
+    min-height: 240px; }
   kds-stepper[md-align-tabs="bottom"] {
-    padding-bottom: 48px; }
+    padding-bottom: 40px; }
     kds-stepper[md-align-tabs="bottom"] kds-steps-wrapper {
       position: absolute;
       bottom: 0;
       left: 0;
       right: 0;
-      height: 48px;
+      height: 40px;
       z-index: 2; }
     kds-stepper[md-align-tabs="bottom"] kds-steps-content-wrapper {
       top: 0;
-      bottom: 48px; }
+      bottom: 40px; }
   kds-stepper.md-dynamic-height kds-steps-content-wrapper {
     min-height: 0;
     position: relative;
@@ -50,7 +50,7 @@ kds-stepper {
     border-width: 0 0 1px;
     border-style: solid; }
   kds-stepper[md-border-bottom]:not(.md-dynamic-height) kds-tabs-content-wrapper {
-    top: 49px; }
+    top: 41px; }
 
 kds-steps-wrapper {
   display: block;
@@ -97,7 +97,7 @@ kds-steps-canvas {
   position: relative;
   overflow: hidden;
   display: block;
-  height: 48px; }
+  height: 40px; }
   kds-steps-canvas .md-dummy-wrapper {
     position: absolute;
     top: 0; }
@@ -110,9 +110,11 @@ kds-steps-canvas {
     kds-steps-canvas.md-center-tabs .md-tab {
       float: none;
       display: inline-block; }
+  kds-steps-canvas kds-step-item.md-active {
+    border-bottom: 2px solid black; }
 
 kds-pagination-wrapper {
-  height: 48px;
+  height: 40px;
   display: block;
   transition: transform 0.2s ease-in-out;
   position: absolute;
@@ -126,7 +128,7 @@ kds-pagination-wrapper {
 kds-steps-content-wrapper {
   display: block;
   position: absolute;
-  top: 20px;
+  top: 40px;
   left: 0;
   right: 0;
   bottom: 0;
@@ -173,18 +175,20 @@ kds-step {
   left: -9999px; }
 
 .kds-step {
-  font-size: 14px;
-  text-align: center;
-  line-height: -4px;
+  height: 40px;
+  line-height: 16px;
+  display: inline-block;
   padding: 12px 24px;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: center;
+  text-transform: uppercase;
   cursor: pointer;
   white-space: nowrap;
   position: relative;
-  text-transform: uppercase;
-  font-weight: 500;
-  box-sizing: border-box;
   overflow: hidden;
-  text-overflow: ellipsis; }
+  text-overflow: ellipsis;
+  box-sizing: border-box; }
   .kds-step.md-focused {
     box-shadow: none;
     outline: none; }
@@ -199,6 +203,8 @@ kds-step {
     cursor: default; }
   .kds-step.ng-leave {
     transition: none; }
+  .kds-step .kds-step-icon {
+    background: #000; }
 
 md-toolbar + kds-stepper {
   border-top-left-radius: 0;

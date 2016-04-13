@@ -1,7 +1,7 @@
 $baseline-grid: 21px;
 $tabs-paginator-width: $baseline-grid * 4 !default;
 $tabs-tab-width: $baseline-grid * 12 !default;
-$tabs-header-height: 48px !default;
+$tabs-header-height: 40px !default;
 
 @keyframes md-tab-content-hide {
   0% { opacity: 1; }
@@ -155,6 +155,13 @@ kds-steps-canvas {
       display: inline-block;
     }
   }
+
+
+  kds-step-item {
+    &.md-active {
+      border-bottom: 2px solid black;
+    }
+  }
 }
 
 kds-pagination-wrapper {
@@ -173,8 +180,6 @@ kds-pagination-wrapper {
     margin: 0 auto;
   }
 }
-
-$tabs-header-height: 20px;
 
 kds-steps-content-wrapper {
   display: block;
@@ -259,20 +264,25 @@ kds-step {
 }
 
 .kds-step {
-  font-size: 14px;
-  text-align: center;
+  //@include rtl(float, left, right);
+
+  height: $tabs-header-height;
   line-height: $tabs-header-height - 24;
+  display: inline-block;
+  
   padding: 12px 24px;
-  //transition: background-color 0.35s $swift-ease-in-out-timing-function;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: center;
+  text-transform: uppercase;
   cursor: pointer;
   white-space: nowrap;
   position: relative;
-  text-transform: uppercase;
-  //@include rtl(float, left, right);
-  font-weight: 500;
-  box-sizing: border-box;
   overflow: hidden;
   text-overflow: ellipsis;
+  box-sizing: border-box;
+  //transition: background-color 0.35s $swift-ease-in-out-timing-function;
+
   &.md-focused {
     box-shadow: none;
     outline: none;
@@ -290,6 +300,11 @@ kds-step {
   }
   &.ng-leave {
     transition: none;
+  }
+
+
+  .kds-step-icon {
+    background: #000;
   }
 }
 
@@ -313,3 +328,11 @@ md-toolbar + kds-stepper {
     margin-left: 0;
   }
 }*/
+
+
+
+
+
+kds-stepper {
+
+}
