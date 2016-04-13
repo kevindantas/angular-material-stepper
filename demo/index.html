@@ -25,13 +25,17 @@
         <kds-step label="Step 1">
             <h2>dawda dwa</h2>
           <h1>First</h1>
+
+          <md-button class="md-primary md-raised" ng-click="steps.step2 = true">Next step</md-button>
+
         </kds-step>
 
-        <kds-step label="Step 2">
+        <kds-step label="Step 2" kds-done="steps.step2">
+          {{steps.step2}}
           <h1>Second</h1>
         </kds-step>
 
-        <kds-step label="Step 3">
+        <kds-step label="Step 3" kds-done="steps.step3">
           <h1>Third</h1>
         </kds-step>
       </kds-stepper>

@@ -32,8 +32,9 @@ angular.module('myApp').config(function($mdThemingProvider) {
 angular.module('myApp').controller('myController', function($scope, $timeout){
 
   $scope.steps = {
-    begin: {},
-    fillForm: {}
+    step1: true,
+    step2: false,
+    step3: false
   };
 
 
@@ -45,7 +46,7 @@ angular.module('myApp').controller('myController', function($scope, $timeout){
     begin: 'Carregando com interpolation ...',
     form: 'Carregando com interpolation ...',
     checkitout: 'Carregando com interpolation ...'
-  }
+  };
 
   $scope.isLoading = false;
 
