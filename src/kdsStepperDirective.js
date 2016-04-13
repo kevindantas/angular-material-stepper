@@ -59,7 +59,7 @@ function KdsStep() {
   return {
     require:  '^?kdsStepper',
     terminal: true,
-    compile:  function (element, attr, a) {
+    compile:  function (element, attr, ctrl) {
       var label = firstChild(element, 'kds-step-label'),
           body  = firstChild(element, 'kds-step-body');
 
@@ -74,11 +74,8 @@ function KdsStep() {
           body.append(contents);
         }
       }
-      // var index = ctrl.getTabElementIndex(element);
-      // console.log(index);
 
       var button = angular.element('<md-button class="md-primary md-raised md-fab md-mini">1</md-button>');
-
       element.append(label);
       if (body.html()) element.append(body);
 
@@ -95,10 +92,15 @@ function KdsStep() {
 
   function postLink(scope, element, attr, ctrl) {
     if (!ctrl) return;
+
     var index = ctrl.getTabElementIndex(element),
-        body  = firstChild(element, 'kds-step-body').remove(),
-        label = firstChild(element, 'kds-step-label').remove(),
-        data  = ctrl.insertTab({
+        body  = firstChild(element, 'kds-step-body'),
+        label = firstChild(element, 'kds-step-label'),
+        icon = angular.element('<md-icon class="kds-step-icon">'+(index+1)+'</md-icon>');
+
+        label.prepend(icon);
+
+      var data  = ctrl.insertTab({
           scope:    scope,
           parent:   scope.$parent,
           index:    index,
@@ -108,8 +110,10 @@ function KdsStep() {
         }, index);
 
 
-    scope.$watch('done', function (val) {
+
+    scope.$watch('done', function (val, val2) {
       scope.disabled = val === false;
+      ctrl.select(index);
     });
 
     scope.select   = scope.select || angular.noop;
@@ -319,11 +323,11 @@ function KdsStepper() {
           '}" ' +
           'ng-keydown="$kdsStepperCtrl.keydown($event)"> ' +
 
-            '<kds-pagination-wrapper ' +
+            '<kds-pagination-wrapper class="layout-row"' +
             'ng-class="{ \'md-center-tabs\': $kdsStepperCtrl.shouldCenterTabs }" ' +
             'md-tab-scroll="$kdsStepperCtrl.scroll($event)"> ' +
 
-              '<kds-step-item tabindex="-1" class="kds-step" role="tab" ' +
+              '<kds-step-item tabindex="-1" class="kds-step flex" role="tab" ' +
               'ng-repeat="tab in $kdsStepperCtrl.steps" ' +
               'aria-controls="tab-content-{{::tab.id}}" ' +
               'aria-selected="{{tab.isActive()}}" ' +
@@ -363,7 +367,7 @@ function KdsStepper() {
           'aria-labelledby="tab-item-{{::tab.id}}" ' +
           'md-swipe-left="$kdsStepperCtrl.swipeContent && $kdsStepperCtrl.incrementIndex(1)" ' +
           'md-swipe-right="$kdsStepperCtrl.swipeContent && $kdsStepperCtrl.incrementIndex(-1)" ' +
-          'ng-if="$kdsStepperCtrl.hasContent" ' +
+          'ng-if="$kdsStepperCtrl.hasContent && tab.isActive()" ' +
           'ng-repeat="(index, tab) in $kdsStepperCtrl.steps" ' +
           'ng-class="{ ' +
           '\'md-no-transition\': $kdsStepperCtrl.lastSelectedIndex == null, ' +

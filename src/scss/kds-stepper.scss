@@ -1,7 +1,7 @@
 $baseline-grid: 21px;
 $tabs-paginator-width: $baseline-grid * 4 !default;
 $tabs-tab-width: $baseline-grid * 12 !default;
-$tabs-header-height: 40px !default;
+$tabs-header-height: 66px !default;
 
 @keyframes md-tab-content-hide {
   0% { opacity: 1; }
@@ -82,7 +82,7 @@ kds-steps-wrapper {
   transform: translate3d(0, 0, 0);
   md-prev-button, md-next-button {
     height: 100%;
-    width: $tabs-paginator-width;
+    //width: $tabs-paginator-width;
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
@@ -137,7 +137,7 @@ kds-steps-canvas {
   position: relative;
   overflow: hidden;
   display: block;
-  height: $tabs-header-height;
+  min-height: $tabs-header-height;
   .md-dummy-wrapper {
     position: absolute;
     top: 0;
@@ -155,23 +155,89 @@ kds-steps-canvas {
       display: inline-block;
     }
   }
+}
 
+kds-step-item {
+  //@include rtl(float, left, right);
 
-  kds-step-item {
-    &.md-active {
-      border-bottom: 2px solid black;
+  height: $tabs-header-height;
+  display: inline-block;
+
+  padding: 24px;
+  font-size: 14px;
+  font-weight: 500;
+  text-overflow: ellipsis;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  white-space: nowrap;
+  box-sizing: border-box;
+  //transition: background-color 0.35s $swift-ease-in-out-timing-function;
+
+  span {
+    background: #fff;
+    padding-right: 10px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .kds-step-icon {
+    color: #fff;
+    background: blue;
+    line-height: 24px;
+    margin-right: 8px;
+    text-align: center;
+    border-radius: 500px;
+  }
+
+  &::before {
+    content: '';
+    background: #ddd;
+    height: 1px;
+    width: 50%;
+    position: absolute;
+    top: 50%;
+    right: 0;
+
+  }
+
+  &.md-focused {
+    box-shadow: none;
+    outline: none;
+  }
+  &.md-active {
+    cursor: default;
+    font-weight: 600;
+  }
+  &.md-disabled {
+    pointer-events: none;
+    touch-action: pan-y;
+    user-select: none;
+    -webkit-user-drag: none;
+    opacity: 0.5;
+    cursor: default;
+    .kds-step-icon {
+      background: #555;
     }
   }
+  &.ng-leave {
+    transition: none;
+  }
+
+  .md-ripple-container {
+    z-index:10;
+  }
+
 }
 
 kds-pagination-wrapper {
   //@include pie-clearfix;
+  width: 100% !important;
   height: $tabs-header-height;
   display: block;
   //transition: transform $swift-ease-in-out-duration $swift-ease-in-out-timing-function;
   transition: transform 0.2s ease-in-out;
   position: absolute;
-  width: 999999px;
   //@include rtl-prop(left, right, 0);
   transform: translate3d(0, 0, 0);
   &.md-center-tabs {
@@ -190,7 +256,6 @@ kds-steps-content-wrapper {
   bottom: 0;
   overflow: hidden;
 }
-
 
 kds-step-content {
   display: block;
@@ -263,50 +328,6 @@ kds-step {
   left: -9999px;
 }
 
-.kds-step {
-  //@include rtl(float, left, right);
-
-  height: $tabs-header-height;
-  line-height: $tabs-header-height - 24;
-  display: inline-block;
-  
-  padding: 12px 24px;
-  font-size: 14px;
-  font-weight: 500;
-  text-align: center;
-  text-transform: uppercase;
-  cursor: pointer;
-  white-space: nowrap;
-  position: relative;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  box-sizing: border-box;
-  //transition: background-color 0.35s $swift-ease-in-out-timing-function;
-
-  &.md-focused {
-    box-shadow: none;
-    outline: none;
-  }
-  &.md-active {
-    cursor: default;
-  }
-  &.md-disabled {
-    pointer-events: none;
-    touch-action: pan-y;
-    user-select: none;
-    -webkit-user-drag: none;
-    opacity: 0.5;
-    cursor: default;
-  }
-  &.ng-leave {
-    transition: none;
-  }
-
-
-  .kds-step-icon {
-    background: #000;
-  }
-}
 
 md-toolbar + kds-stepper {
   border-top-left-radius: 0;
@@ -328,11 +349,3 @@ md-toolbar + kds-stepper {
     margin-left: 0;
   }
 }*/
-
-
-
-
-
-kds-stepper {
-
-}

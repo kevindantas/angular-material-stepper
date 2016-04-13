@@ -23,19 +23,19 @@ kds-stepper {
   position: relative;
   flex-shrink: 0; }
   kds-stepper:not(.md-no-tab-content):not(.md-dynamic-height) {
-    min-height: 240px; }
+    min-height: 266px; }
   kds-stepper[md-align-tabs="bottom"] {
-    padding-bottom: 40px; }
+    padding-bottom: 66px; }
     kds-stepper[md-align-tabs="bottom"] kds-steps-wrapper {
       position: absolute;
       bottom: 0;
       left: 0;
       right: 0;
-      height: 40px;
+      height: 66px;
       z-index: 2; }
     kds-stepper[md-align-tabs="bottom"] kds-steps-content-wrapper {
       top: 0;
-      bottom: 40px; }
+      bottom: 66px; }
   kds-stepper.md-dynamic-height kds-steps-content-wrapper {
     min-height: 0;
     position: relative;
@@ -50,7 +50,7 @@ kds-stepper {
     border-width: 0 0 1px;
     border-style: solid; }
   kds-stepper[md-border-bottom]:not(.md-dynamic-height) kds-tabs-content-wrapper {
-    top: 41px; }
+    top: 67px; }
 
 kds-steps-wrapper {
   display: block;
@@ -58,7 +58,6 @@ kds-steps-wrapper {
   transform: translate3d(0, 0, 0); }
   kds-steps-wrapper md-prev-button, kds-steps-wrapper md-next-button {
     height: 100%;
-    width: 84px;
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
@@ -97,7 +96,7 @@ kds-steps-canvas {
   position: relative;
   overflow: hidden;
   display: block;
-  height: 40px; }
+  min-height: 66px; }
   kds-steps-canvas .md-dummy-wrapper {
     position: absolute;
     top: 0; }
@@ -110,15 +109,65 @@ kds-steps-canvas {
     kds-steps-canvas.md-center-tabs .md-tab {
       float: none;
       display: inline-block; }
-  kds-steps-canvas kds-step-item.md-active {
-    border-bottom: 2px solid black; }
+
+kds-step-item {
+  height: 66px;
+  display: inline-block;
+  padding: 24px;
+  font-size: 14px;
+  font-weight: 500;
+  text-overflow: ellipsis;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  white-space: nowrap;
+  box-sizing: border-box; }
+  kds-step-item span {
+    background: #fff;
+    padding-right: 10px;
+    position: relative;
+    z-index: 1; }
+  kds-step-item .kds-step-icon {
+    color: #fff;
+    background: blue;
+    line-height: 24px;
+    margin-right: 8px;
+    text-align: center;
+    border-radius: 500px; }
+  kds-step-item::before {
+    content: '';
+    background: #ddd;
+    height: 1px;
+    width: 50%;
+    position: absolute;
+    top: 50%;
+    right: 0; }
+  kds-step-item.md-focused {
+    box-shadow: none;
+    outline: none; }
+  kds-step-item.md-active {
+    cursor: default;
+    font-weight: 600; }
+  kds-step-item.md-disabled {
+    pointer-events: none;
+    touch-action: pan-y;
+    user-select: none;
+    -webkit-user-drag: none;
+    opacity: 0.5;
+    cursor: default; }
+    kds-step-item.md-disabled .kds-step-icon {
+      background: #555; }
+  kds-step-item.ng-leave {
+    transition: none; }
+  kds-step-item .md-ripple-container {
+    z-index: 10; }
 
 kds-pagination-wrapper {
-  height: 40px;
+  width: 100% !important;
+  height: 66px;
   display: block;
   transition: transform 0.2s ease-in-out;
   position: absolute;
-  width: 999999px;
   transform: translate3d(0, 0, 0); }
   kds-pagination-wrapper.md-center-tabs {
     position: relative;
@@ -128,7 +177,7 @@ kds-pagination-wrapper {
 kds-steps-content-wrapper {
   display: block;
   position: absolute;
-  top: 40px;
+  top: 66px;
   left: 0;
   right: 0;
   bottom: 0;
@@ -173,38 +222,6 @@ kds-step {
   position: absolute;
   z-index: -1;
   left: -9999px; }
-
-.kds-step {
-  height: 40px;
-  line-height: 16px;
-  display: inline-block;
-  padding: 12px 24px;
-  font-size: 14px;
-  font-weight: 500;
-  text-align: center;
-  text-transform: uppercase;
-  cursor: pointer;
-  white-space: nowrap;
-  position: relative;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  box-sizing: border-box; }
-  .kds-step.md-focused {
-    box-shadow: none;
-    outline: none; }
-  .kds-step.md-active {
-    cursor: default; }
-  .kds-step.md-disabled {
-    pointer-events: none;
-    touch-action: pan-y;
-    user-select: none;
-    -webkit-user-drag: none;
-    opacity: 0.5;
-    cursor: default; }
-  .kds-step.ng-leave {
-    transition: none; }
-  .kds-step .kds-step-icon {
-    background: #000; }
 
 md-toolbar + kds-stepper {
   border-top-left-radius: 0;
